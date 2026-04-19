@@ -1,21 +1,45 @@
 package com.decolar.sistema_voos.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 public class Flight {
 
     @Id
-    private String id;
-    private String from;
-    private String to;
-    private String date;
-    private String departure;
-    private String airline;
-    private String price;
+    private String id; // ex: "LA1234"
 
-    public Flight(String id, String from, String to, String date, String departure, String airline, String price) {
+    @Column(name = "origin_airport", nullable = false)
+    private String from; // código IATA (ex: GRU)
+
+    @Column(name = "destination_airport", nullable = false)
+    private String to;   // código IATA (ex: REC)
+
+    @Column(name = "flight_date", nullable = false)
+    private LocalDate date; // usar LocalDate em vez de String
+
+    @Column(name = "departure_time")
+    private LocalTime departure; // horário de partida
+
+    private String airline;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal price; // BigDecimal para cálculos precisos
+
+    @Enumerated(EnumType.STRING)
+    private FlightClass flightClass; // Enum para Econômica/Executiva
+
+    private Integer availableSeats; // assentos disponíveis (para controle de lotação)
+
+    // Construtor padrão (obrigatório para JPA)
+    public Flight() {
+    }
+
+    // Construtor com os campos principais
+    public Flight(String id, String from, String to, LocalDate date, LocalTime departure,
+                  String airline, BigDecimal price, FlightClass flightClass, Integer availableSeats) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -23,6 +47,8 @@ public class Flight {
         this.departure = departure;
         this.airline = airline;
         this.price = price;
+        this.flightClass = flightClass;
+        this.availableSeats = availableSeats;
     }
 
     public String getId() {
@@ -49,19 +75,19 @@ public class Flight {
         this.to = to;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getDeparture() {
+    public LocalTime getDeparture() {
         return departure;
     }
 
-    public void setDeparture(String departure) {
+    public void setDeparture(LocalTime departure) {
         this.departure = departure;
     }
 
@@ -73,11 +99,27 @@ public class Flight {
         this.airline = airline;
     }
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public FlightClass getFlightClass() {
+        return flightClass;
+    }
+
+    public void setFlightClass(FlightClass flightClass) {
+        this.flightClass = flightClass;
+    }
+
+    public Integer getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(Integer availableSeats) {
+        this.availableSeats = availableSeats;
     }
 }

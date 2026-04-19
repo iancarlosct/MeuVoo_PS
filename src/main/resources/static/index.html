@@ -47,7 +47,7 @@
                         <div class="input-field">
                             <label for="from">Origem</label>
                             <div class="input-icon">
-                                <input type="text" id="from" name="from" placeholder="Cidade ou aeroporto" required>
+                                <input type="text" id="from" name="from" placeholder="Cidade ou aeroporto" list="cidadesList" required>
                             </div>
                         </div>
 
@@ -58,7 +58,7 @@
                         <div class="input-field">
                             <label for="to">Destino</label>
                             <div class="input-icon">
-                                <input type="text" id="to" name="to" placeholder="Cidade ou aeroporto" required>
+                                <input type="text" id="to" name="to" placeholder="Cidade ou aeroporto" list="cidadesList" required>
                             </div>
                         </div>
 
@@ -103,12 +103,20 @@
                         </div>
                     </div>
 
-                    <!-- Campos do modo Preço (inicialmente oculto) -->
+                    <!-- ========== CAMPOS DO MODO PREÇO (ATUALIZADO) ========== -->
                     <div class="form-row mode-fields" id="priceFields" style="display: none;">
+                        <!-- Novo campo: Origem -->
+                        <div class="input-field">
+                            <label for="priceFrom">Origem</label>
+                            <div class="input-icon">
+                                <input type="text" id="priceFrom" name="priceFrom" placeholder="Sua cidade" list="cidadesList" required>
+                            </div>
+                        </div>
+
                         <div class="input-field">
                             <label for="maxPrice">Valor máximo (R$)</label>
                             <div class="input-icon">
-                                <input type="number" id="maxPrice" name="maxPrice" placeholder="Ex: 1500" min="0" step="50">
+                                <input type="number" id="maxPrice" name="maxPrice" placeholder="Ex: 1500" min="0" step="50" required>
                             </div>
                         </div>
 
@@ -137,6 +145,48 @@
 
                     <button type="submit" class="btn-search" id="searchButton">Buscar voos</button>
                 </form>
+
+                <!-- Datalist com sugestões de cidades -->
+                <datalist id="cidadesList">
+                    <!-- Nacionais -->
+                    <option value="São Paulo">GRU</option>
+                    <option value="Rio de Janeiro">GIG / SDU</option>
+                    <option value="Brasília">BSB</option>
+                    <option value="Salvador">SSA</option>
+                    <option value="Recife">REC</option>
+                    <option value="Fortaleza">FOR</option>
+                    <option value="Belo Horizonte">CNF</option>
+                    <option value="Curitiba">CWB</option>
+                    <option value="Porto Alegre">POA</option>
+                    <option value="Manaus">MAO</option>
+                    <option value="Campinas">VCP</option>
+                    <option value="Congonhas">CGH</option>
+                    <option value="Galeão">GIG</option>
+                    <option value="Santos Dumont">SDU</option>
+                    <option value="Confins">CNF</option>
+                    <option value="Pampulha">PLU</option>
+                    <!-- Internacionais -->
+                    <option value="Santiago">SCL</option>
+                    <option value="Buenos Aires">EZE</option>
+                    <option value="Miami">MIA</option>
+                    <option value="Nova York">JFK</option>
+                    <option value="Lisboa">LIS</option>
+                    <option value="Londres">LHR</option>
+                    <option value="Paris">CDG</option>
+                    <option value="Lima">LIM</option>
+                    <option value="Roma">FCO</option>
+                </datalist>
+
+                <!-- Resultados da busca -->
+                <div id="resultadosBusca" class="resultados-busca" style="display: none;">
+                    <div class="resultados-header">
+                        <h3>Voos encontrados</h3>
+                        <span id="quantidadeResultados"></span>
+                    </div>
+                    <div id="listaVoos" class="lista-voos">
+                        <!-- Cards de voo serão inseridos via JS -->
+                    </div>
+                </div>
             </div>
         </div>
     </main>

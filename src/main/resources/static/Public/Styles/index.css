@@ -543,3 +543,134 @@ body {
     font-size: 0.85rem;
   }
 }
+
+/* Resultados da busca */
+.resultados-busca {
+  margin-top: 2.5rem;
+  border-top: 2px solid #e2e8f0;
+  padding-top: 2rem;
+}
+
+.resultados-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.resultados-header h3 {
+  font-size: 1.4rem;
+  color: #0b1e3a;
+}
+
+#quantidadeResultados {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.lista-voos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.voo-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  border: 1px solid #edf2f7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  transition: transform 0.1s;
+}
+
+.voo-preco .por-pessoa {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #64748b;
+  margin-left: 2px;
+}
+
+.voo-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.voo-info {
+  flex: 2;
+  min-width: 200px;
+}
+
+.voo-rota {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.3rem;
+}
+
+.voo-rota .seta {
+  color: #2563eb;
+  margin: 0 0.5rem;
+}
+
+.voo-detalhes {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.voo-preco {
+  text-align: right;
+  min-width: 120px;
+}
+
+.voo-preco .preco {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e4bd2;
+  display: block;
+}
+
+.voo-preco .assentos {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.btn-selecionar {
+  background: #1e4bd2;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.8rem;
+  border-radius: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-selecionar:hover {
+  background: #0f2b8a;
+}
+
+.sem-resultados {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .voo-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .voo-preco {
+    text-align: left;
+    width: 100%;
+  }
+  .btn-selecionar {
+    width: 100%;
+  }
+}

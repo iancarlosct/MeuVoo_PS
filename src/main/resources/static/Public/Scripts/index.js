@@ -1,16 +1,93 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // ---------- Mapeamento cidade -> sigla (para busca) ----------
+  const cidadeParaSigla = {
+    'são paulo': 'GRU',
+    'sao paulo': 'GRU',
+    'sp': 'GRU',
+    'guarulhos': 'GRU',
+    'congonhas': 'CGH',
+    'campinas': 'VCP',
+    'rio de janeiro': 'GIG',
+    'rio': 'GIG',
+    'galeão': 'GIG',
+    'santos dumont': 'SDU',
+    'brasília': 'BSB',
+    'brasilia': 'BSB',
+    'salvador': 'SSA',
+    'recife': 'REC',
+    'fortaleza': 'FOR',
+    'belo horizonte': 'CNF',
+    'confins': 'CNF',
+    'pampulha': 'PLU',
+    'curitiba': 'CWB',
+    'porto alegre': 'POA',
+    'manaus': 'MAO',
+    'santiago': 'SCL',
+    'buenos aires': 'EZE',
+    'miami': 'MIA',
+    'nova york': 'JFK',
+    'lisboa': 'LIS',
+    'londres': 'LHR',
+    'paris': 'CDG',
+    'lima': 'LIM',
+    'roma': 'FCO'
+  };
+
+  // Mapeamento sigla -> nome da cidade (para exibição)
+  const siglaParaCidade = {
+    'GRU': 'São Paulo',
+    'CGH': 'São Paulo (Congonhas)',
+    'VCP': 'Campinas',
+    'GIG': 'Rio de Janeiro (Galeão)',
+    'SDU': 'Rio de Janeiro (Santos Dumont)',
+    'BSB': 'Brasília',
+    'SSA': 'Salvador',
+    'REC': 'Recife',
+    'FOR': 'Fortaleza',
+    'CNF': 'Belo Horizonte',
+    'PLU': 'Belo Horizonte (Pampulha)',
+    'CWB': 'Curitiba',
+    'POA': 'Porto Alegre',
+    'MAO': 'Manaus',
+    'SCL': 'Santiago',
+    'EZE': 'Buenos Aires',
+    'MIA': 'Miami',
+    'JFK': 'Nova York',
+    'LIS': 'Lisboa',
+    'LHR': 'Londres',
+    'CDG': 'Paris',
+    'LIM': 'Lima',
+    'FCO': 'Roma'
+  };
+
+  function obterNomeCidade(sigla) {
+    return siglaParaCidade[sigla] || sigla;
+  }
+
+  function converterParaSigla(valor) {
+    if (!valor) return '';
+    const limpo = valor.trim();
+    if (/^[A-Z]{3}$/.test(limpo)) {
+      return limpo;
+    }
+    const chave = limpo.toLowerCase();
+    return cidadeParaSigla[chave] || '';
+  }
+
   // ---------- Elementos ----------
   const swapBtn = document.querySelector('.swap-btn');
   const fromInput = document.getElementById('from');
   const toInput = document.getElementById('to');
+  const priceFromInput = document.getElementById('priceFrom');
 
   // Modo de busca
   const modeBtns = document.querySelectorAll('.mode-btn');
   const routeFields = document.getElementById('routeFields');
   const priceFields = document.getElementById('priceFields');
   const searchBtn = document.getElementById('searchButton');
+  const form = document.getElementById('flightSearchForm');
 
-  // Componentes do modo Rota (passageiros/classe)
+  // Componentes do modo Rota
   const trigger = document.getElementById('passengersTrigger');
   const dropdown = document.getElementById('passengersDropdown');
   const displaySpan = document.getElementById('passengersDisplay');
@@ -20,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const classRadios = document.querySelectorAll('input[name="flightClass"]');
   const applyBtn = document.getElementById('applyPassengers');
 
-  // Componentes do modo Preço (apenas adultos)
+  // Componentes do modo Preço
   const priceTrigger = document.getElementById('pricePassengersTrigger');
   const priceDropdown = document.getElementById('pricePassengersDropdown');
   const priceDisplaySpan = document.getElementById('pricePassengersDisplay');
@@ -29,16 +106,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const priceIncrement = document.querySelector('[data-action="increment-price"]');
   const priceApply = document.getElementById('applyPricePassengers');
 
+  // Resultados
+  const resultadosDiv = document.getElementById('resultadosBusca');
+  const listaVoos = document.getElementById('listaVoos');
+  const qtdResultados = document.getElementById('quantidadeResultados');
+
   // Estados
   let adults = 1;
-  let selectedClass = 'Econômica';
+  let selectedClass = 'ECONOMICA';
   let priceAdults = 1;
-  let currentMode = 'route'; // 'route' ou 'price'
+  let currentMode = 'route';
 
-  // ---------- Funções auxiliares ----------
+  const API_BASE = 'http://localhost:8080/api/flights';
+
+  // ---------- Funções auxiliares de exibição ----------
   function updateRouteDisplay() {
     const plural = adults > 1 ? 'passageiros' : 'passageiro';
-    displaySpan.textContent = `${adults} ${plural}, ${selectedClass}`;
+    const classeExib = selectedClass === 'ECONOMICA' ? 'Econômica' : 'Executiva';
+    displaySpan.textContent = `${adults} ${plural}, ${classeExib}`;
   }
 
   function updatePriceDisplay() {
@@ -55,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---------- Lógica do modo Rota (passageiros/classe) ----------
+  // ---------- Dropdown passageiros (modo rota) ----------
   if (trigger && dropdown) {
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -82,7 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyBtn.addEventListener('click', () => {
       classRadios.forEach(radio => {
-        if (radio.checked) selectedClass = radio.value;
+        if (radio.checked) {
+          selectedClass = radio.value === 'Econômica' ? 'ECONOMICA' : 'EXECUTIVA';
+        }
       });
       updateRouteDisplay();
       dropdown.classList.remove('show');
@@ -92,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateRouteDisplay();
   }
 
-  // ---------- Lógica do modo Preço (apenas adultos) ----------
+  // ---------- Dropdown passageiros (modo preço) ----------
   if (priceTrigger && priceDropdown) {
     priceTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -126,59 +213,145 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePriceDisplay();
   }
 
-  // ---------- Alternar entre modos ----------
+  // ---------- Alternar modos ----------
   function setMode(mode) {
     currentMode = mode;
     if (mode === 'route') {
       routeFields.style.display = 'flex';
       priceFields.style.display = 'none';
       searchBtn.textContent = 'Buscar voos';
-      // Desabilitar required no campo de preço
       document.getElementById('maxPrice').required = false;
-      document.getElementById('from').required = true;
-      document.getElementById('to').required = true;
+      if (priceFromInput) priceFromInput.required = false;
+      fromInput.required = true;
+      toInput.required = true;
       document.getElementById('date').required = true;
     } else {
       routeFields.style.display = 'none';
       priceFields.style.display = 'flex';
       searchBtn.textContent = 'Recomendar destinos';
       document.getElementById('maxPrice').required = true;
-      document.getElementById('from').required = false;
-      document.getElementById('to').required = false;
+      if (priceFromInput) priceFromInput.required = true;
+      fromInput.required = false;
+      toInput.required = false;
       document.getElementById('date').required = false;
     }
-    // Atualizar botões ativos
     modeBtns.forEach(btn => {
       btn.classList.remove('active');
       if (btn.dataset.mode === mode) btn.classList.add('active');
     });
+    resultadosDiv.style.display = 'none';
   }
 
   modeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      setMode(btn.dataset.mode);
-    });
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
   });
 
-  // ---------- Submissão do formulário ----------
-  const form = document.getElementById('flightSearchForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (currentMode === 'route') {
-      const origem = fromInput.value || 'não informada';
-      const destino = toInput.value || 'não informado';
-      const data = document.getElementById('date').value || 'não informada';
-      alert(`🔍 Buscando voos de ${origem} para ${destino} na data ${data}.\n${adults} ${adults > 1 ? 'passageiros' : 'passageiro'}, classe ${selectedClass}.`);
+  // ---------- Exibir resultados ----------
+  function exibirVoos(voos) {
+    if (!voos || voos.length === 0) {
+      qtdResultados.textContent = 'Nenhum voo encontrado';
+      listaVoos.innerHTML = '<p class="sem-resultados">😕 Nenhum voo encontrado para os critérios informados.</p>';
     } else {
-      const maxPrice = document.getElementById('maxPrice').value;
-      if (!maxPrice || maxPrice <= 0) {
-        alert('Por favor, informe um valor máximo válido.');
-        return;
+      qtdResultados.textContent = `${voos.length} voos encontrados`;
+      let html = '';
+      voos.forEach(voo => {
+        const dataFormatada = new Date(voo.date).toLocaleDateString('pt-BR');
+        const precoFormatado = Number(voo.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const classeFormatada = voo.flightClass === 'ECONOMICA' ? 'Econômica' : 'Executiva';
+        html += `
+          <div class="voo-card">
+            <div class="voo-info">
+              <div class="voo-rota">
+                <span class="origem">${obterNomeCidade(voo.from)}</span>
+                <span class="seta">→</span>
+                <span class="destino">${obterNomeCidade(voo.to)}</span>
+              </div>
+              <div class="voo-detalhes">
+                <span>${dataFormatada} • ${voo.departure || 'Horário não informado'}</span>
+                <span>${voo.airline} • ${classeFormatada}</span>
+              </div>
+            </div>
+            <div class="voo-preco">
+              <span class="preco">${precoFormatado} <span class="por-pessoa">/ pessoa</span></span>
+              <span class="assentos">${voo.availableSeats} assentos</span>
+            </div>
+            <button class="btn-selecionar" data-id="${voo.id}">Selecionar</button>
+          </div>
+        `;
+      });
+      listaVoos.innerHTML = html;
+    }
+    resultadosDiv.style.display = 'block';
+  }
+
+  // ---------- Submissão do formulário ----------
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultadosDiv.style.display = 'none';
+
+    try {
+      if (currentMode === 'route') {
+        const fromRaw = fromInput.value.trim();
+        const toRaw = toInput.value.trim();
+        const date = document.getElementById('date').value;
+
+        if (!fromRaw || !toRaw || !date) {
+          alert('Preencha origem, destino e data.');
+          return;
+        }
+
+        const fromSigla = converterParaSigla(fromRaw);
+        const toSigla = converterParaSigla(toRaw);
+
+        if (!fromSigla || !toSigla) {
+          alert('Não foi possível identificar a sigla do aeroporto. Use o nome da cidade ou a sigla IATA (ex: GRU).');
+          return;
+        }
+
+        const url = `${API_BASE}/search?from=${fromSigla}&to=${toSigla}&date=${date}&passengers=${adults}&flightClass=${selectedClass}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erro na busca');
+        const voos = await response.json();
+        exibirVoos(voos);
+      } else {
+        const fromRaw = priceFromInput ? priceFromInput.value.trim() : '';
+        const maxPrice = document.getElementById('maxPrice').value;
+
+        if (!fromRaw || !maxPrice || maxPrice <= 0) {
+          alert('Preencha a cidade de origem e um valor máximo válido.');
+          return;
+        }
+
+        const fromSigla = converterParaSigla(fromRaw);
+        if (!fromSigla) {
+          alert('Cidade de origem não reconhecida. Use o nome da cidade ou a sigla IATA (ex: GRU).');
+          return;
+        }
+
+        const url = `${API_BASE}/recommend?from=${fromSigla}&maxPrice=${maxPrice}&passengers=${priceAdults}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erro na recomendação');
+        const voos = await response.json();
+        exibirVoos(voos);
       }
-      alert(`✨ Recomendando destinos para até ${priceAdults} ${priceAdults > 1 ? 'pessoas' : 'pessoa'} com orçamento de R$ ${maxPrice}.`);
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao buscar voos. Verifique se o servidor está rodando.');
     }
   });
 
-  // Iniciar com modo Rota ativo
+  // Carregar cidades dinamicamente para o datalist (opcional)
+  async function carregarCidades() {
+    try {
+      const response = await fetch(`${API_BASE}/origins`);
+      const cidades = await response.json();
+      const datalist = document.getElementById('cidadesList');
+      datalist.innerHTML = cidades.map(cidade => `<option value="${cidade}">`).join('');
+    } catch (error) {
+      console.error('Erro ao carregar cidades:', error);
+    }
+  }
+  carregarCidades();
+
   setMode('route');
 });
