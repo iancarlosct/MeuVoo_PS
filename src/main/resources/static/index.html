@@ -3,80 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca de Voos</title>
+    <title>MeuVoo · Passagens aéreas</title>
     <link rel="stylesheet" href="Public/Styles/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
 </head>
 <body>
-<header class="top-header">
-    <div class="logo">MeuVoo</div>
-    <div class="user-actions">
-        <a href="Public/login.html" class="btn-login-nav">Entrar / Cadastrar</a>
-    </div>
-</header>
-
-<nav class="category-menu">
-    <ul>
-        <li>Hospedagens</li>
-        <li class="active">Passagens</li>
-        <li>Pacotes</li>
-        <li>Ofertas</li>
-        <li>Aluguel de Carros</li>
-    </ul>
-</nav>
-
-<main class="dashboard-container">
-    <section class="search-box">
-        <div class="search-header">
-            <h2>Passagens aéreas</h2>
-            <div class="trip-types">
-                <button class="active">Ida e volta</button>
-                <button>Só ida</button>
-                <button>Multidestino</button>
+<div class="app-wrapper">
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">MeuVoo</div>
+            <div class="user-area">
+                <a href="Public/login.html" class="btn-login">Entrar / Cadastrar</a>
             </div>
         </div>
+    </header>
 
-        <form id="flightSearchForm" class="search-form">
-            <div class="input-group">
-                <label for="from">Origem</label>
-                <input type="text" id="from" name="from" placeholder="Insira sua cidade de origem" required>
+    <nav class="nav-bar">
+        <ul class="nav-links">
+            <li class="active"><a href="index.html">Passagens</a></li>
+            <li><a href="Public/carrinho.html">Carrinho</a></li>
+            <li><a href="Public/checkin.html">Check-in</a></li>
+            <li><a href="Public/minhas-viagens.html">Minhas viagens</a></li>
+            <li><a href="Public/ofertas.html">Ofertas</a></li>
+            <li><a href="Public/ajuda.html">Ajuda</a></li>
+        </ul>
+    </nav>
+
+    <main class="search-hero">
+        <div class="search-container">
+            <div class="search-card">
+                <div class="search-header">
+                    <h1>Passagens aéreas</h1>
+                    <!-- Toggle de modo de busca -->
+                    <div class="search-mode-toggle">
+                        <button type="button" class="mode-btn active" data-mode="route">✈️ Buscar por rota</button>
+                        <button type="button" class="mode-btn" data-mode="price">💰 Recomendar por preço</button>
+                    </div>
+                </div>
+
+                <form id="flightSearchForm" class="flight-form">
+                    <!-- Campos do modo Rota (padrão) -->
+                    <div class="form-row mode-fields" id="routeFields">
+                        <div class="input-field">
+                            <label for="from">Origem</label>
+                            <div class="input-icon">
+                                <input type="text" id="from" name="from" placeholder="Cidade ou aeroporto" required>
+                            </div>
+                        </div>
+
+                        <div class="swap-icon-wrapper">
+                            <button type="button" class="swap-btn" aria-label="Inverter origem e destino">⇄</button>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="to">Destino</label>
+                            <div class="input-icon">
+                                <input type="text" id="to" name="to" placeholder="Cidade ou aeroporto" required>
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="date">Data de ida</label>
+                            <div class="input-icon">
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                        </div>
+
+                        <!-- Seletor de passageiros/classe (usado no modo rota) -->
+                        <div class="input-field" id="routePassengerField">
+                            <label for="passengersTrigger">Passageiros / Classe</label>
+                            <div class="passenger-selector">
+                                <div class="selector-trigger" id="passengersTrigger">
+                                    <span id="passengersDisplay">1 passageiro, Econômica</span>
+                                    <span class="arrow">▼</span>
+                                </div>
+                                <div class="selector-dropdown" id="passengersDropdown">
+                                    <div class="dropdown-section">
+                                        <label>Adultos</label>
+                                        <div class="counter">
+                                            <button type="button" class="counter-btn" data-action="decrement">−</button>
+                                            <span id="adultsCount">1</span>
+                                            <button type="button" class="counter-btn" data-action="increment">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-section">
+                                        <label>Classe</label>
+                                        <div class="class-options">
+                                            <label class="radio-label">
+                                                <input type="radio" name="flightClass" value="Econômica" checked> Econômica
+                                            </label>
+                                            <label class="radio-label">
+                                                <input type="radio" name="flightClass" value="Executiva"> Executiva
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn-apply" id="applyPassengers">Aplicar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campos do modo Preço (inicialmente oculto) -->
+                    <div class="form-row mode-fields" id="priceFields" style="display: none;">
+                        <div class="input-field">
+                            <label for="maxPrice">Valor máximo (R$)</label>
+                            <div class="input-icon">
+                                <input type="number" id="maxPrice" name="maxPrice" placeholder="Ex: 1500" min="0" step="50">
+                            </div>
+                        </div>
+
+                        <div class="input-field" id="pricePassengerField">
+                            <label for="pricePassengersTrigger">Quantos passageiros?</label>
+                            <div class="passenger-selector">
+                                <div class="selector-trigger" id="pricePassengersTrigger">
+                                    <span id="pricePassengersDisplay">1 adulto</span>
+                                    <span class="arrow">▼</span>
+                                </div>
+                                <div class="selector-dropdown" id="pricePassengersDropdown">
+                                    <div class="dropdown-section">
+                                        <label>Adultos</label>
+                                        <div class="counter">
+                                            <button type="button" class="counter-btn" data-action="decrement-price">−</button>
+                                            <span id="priceAdultsCount">1</span>
+                                            <button type="button" class="counter-btn" data-action="increment-price">+</button>
+                                        </div>
+                                    </div>
+                                    <!-- Sem opção de classe no modo preço -->
+                                    <button type="button" class="btn-apply" id="applyPricePassengers">Aplicar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-search" id="searchButton">Buscar voos</button>
+                </form>
             </div>
-
-            <div class="swap-icon">⇄</div>
-
-            <div class="input-group">
-                <label for="to">Destino</label>
-                <input type="text" id="to" name="to" placeholder="Insira a cidade de destino" required>
-            </div>
-
-            <div class="input-group">
-                <label for="date">Data de Ida</label>
-                <input type="date" id="date" name="date" required>
-            </div>
-
-            <div class="input-group">
-                <label for="passengers">Passageiros e Classe</label>
-                <input type="text" id="passengers" value="1 pessoa, Econômica" readonly>
-            </div>
-
-            <button type="submit" class="btn-search">Buscar</button>
-        </form>
-    </section>
-
-    <section class="widgets-area">
-        <div class="widget-card promo-1">
-            <h3>Ofertas Recife</h3>
-            <p>A partir de R$ 174</p>
         </div>
-        <div class="widget-card promo-2">
-            <h3>Voos Santiago</h3>
-            <p>A partir de R$ 710</p>
-        </div>
-        <div class="widget-card promo-3">
-            <h3>Buenos Aires</h3>
-            <p>A partir de R$ 947</p>
-        </div>
-    </section>
-</main>
+    </main>
+</div>
 
 <script src="Public/Scripts/index.js"></script>
 </body>

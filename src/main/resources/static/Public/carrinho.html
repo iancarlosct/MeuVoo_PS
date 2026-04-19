@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeuVoo · Carrinho</title>
+    <link rel="stylesheet" href="Styles/index.css">
+    <link rel="stylesheet" href="Styles/carrinho.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-wrapper">
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">MeuVoo</div>
+            <div class="user-area">
+                <a href="login.html" class="btn-login">Entrar / Cadastrar</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <ul class="nav-links">
+            <li><a href="../index.html">Passagens</a></li>
+            <li class="active"><a href="carrinho.html">Carrinho</a></li>
+            <li><a href="checkin.html">Check-in</a></li>
+            <li><a href="minhas-viagens.html">Minhas viagens</a></li>
+            <li><a href="ofertas.html">Ofertas</a></li>
+            <li><a href="ajuda.html">Ajuda</a></li>
+        </ul>
+    </nav>
+
+    <main class="carrinho-main">
+        <div class="carrinho-container">
+            <h1 class="carrinho-titulo">Seu carrinho</h1>
+
+            <!-- Área de itens do carrinho -->
+            <div id="itensCarrinho" class="itens-carrinho">
+                <!-- Itens serão inseridos via JavaScript -->
+            </div>
+
+            <!-- Mensagem de carrinho vazio -->
+            <div id="carrinhoVazio" class="carrinho-vazio" style="display: none;">
+                <p>🛒 Seu carrinho está vazio.</p>
+                <a href="../index.html" class="btn-continuar">Buscar passagens</a>
+            </div>
+
+            <!-- Resumo do pedido -->
+            <div id="resumoCarrinho" class="resumo-carrinho" style="display: none;">
+                <div class="resumo-header">
+                    <h2>Resumo da compra</h2>
+                </div>
+                <div class="resumo-linha">
+                    <span>Subtotal</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="resumo-linha">
+                    <span>Taxas e impostos</span>
+                    <span id="taxas">R$ 0,00</span>
+                </div>
+                <div class="resumo-linha total">
+                    <span>Total</span>
+                    <span id="total">R$ 0,00</span>
+                </div>
+                <button class="btn-finalizar" id="btnFinalizar">Finalizar compra</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="Scripts/carrinho.js"></script>
+</body>
+</html>
