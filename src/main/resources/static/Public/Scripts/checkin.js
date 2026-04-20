@@ -1,181 +1,151 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Elementos da interface
-  const formCheckin = document.getElementById('formCheckin');
-  const buscaDiv = document.getElementById('buscaReserva');
-  const detalhesDiv = document.getElementById('detalhesReserva');
-  const mensagemDiv = document.getElementById('mensagemCheckin');
-  const btnOutraReserva = document.getElementById('btnOutraReserva');
-  const btnRealizarCheckin = document.getElementById('btnRealizarCheckin');
+    const urlParams = new URLSearchParams(window.location.search);
+    let localizadorUrl = urlParams.get('localizador');
 
-  // Campos de exibição
-  const vooNumeroSpan = document.getElementById('vooNumero');
-  const origemSpan = document.getElementById('origem');
-  const destinoSpan = document.getElementById('destino');
-  const dataVooSpan = document.getElementById('dataVoo');
-  const horarioVooSpan = document.getElementById('horarioVoo');
-  const portaoSpan = document.getElementById('portao');
-  const listaPassageirosDiv = document.getElementById('listaPassageiros');
-
-  // Dados mockados de reservas (simulação)
-  const reservasMock = {
-    'ABC123': {
-      localizador: 'ABC123',
-      sobrenome: 'SILVA',
-      voo: {
-        numero: 'MV 4321',
-        origem: 'GRU (São Paulo)',
-        destino: 'REC (Recife)',
-        data: '20/05/2026',
-        horario: '08:45 - 11:20',
-        portao: 'A12'
-      },
-      passageiros: [
-        { nome: 'João Silva', assento: '12A' },
-        { nome: 'Maria Silva', assento: '12B' }
-      ],
-      checkinRealizado: false
-    },
-    'XYZ789': {
-      localizador: 'XYZ789',
-      sobrenome: 'OLIVEIRA',
-      voo: {
-        numero: 'MV 2156',
-        origem: 'BSB (Brasília)',
-        destino: 'SSA (Salvador)',
-        data: '22/06/2026',
-        horario: '14:30 - 16:10',
-        portao: 'B05'
-      },
-      passageiros: [
-        { nome: 'Ana Oliveira', assento: null },
-        { nome: 'Carlos Oliveira', assento: null }
-      ],
-      checkinRealizado: false
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioMeuVoo'));
+    if (!usuarioLogado) {
+        alert('Faça login para acessar o check‑in.');
+        window.location.href = 'login.html';
+        return;
     }
-  };
 
-  let reservaAtual = null;
+    const historico = JSON.parse(localStorage.getItem('historicoReservas')) || [];
+    let reservaAtual = null;
 
-  // Função para exibir mensagens
-  function exibirMensagem(texto, tipo = 'erro') {
-    mensagemDiv.innerHTML = `<div class="mensagem-${tipo}">${texto}</div>`;
-  }
+    const buscaDiv = document.getElementById('buscaReserva');
+    const detalhesDiv = document.getElementById('detalhesReserva');
+    const mensagemDiv = document.getElementById('mensagemFeedback');
+    const formCheckin = document.getElementById('formCheckin');
 
-  function limparMensagem() {
-    mensagemDiv.innerHTML = '';
-  }
+    const siglaParaCidade = {
+        'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'GIG': 'Rio de Janeiro',
+        'BSB': 'Brasília', 'SSA': 'Salvador', 'REC': 'Recife', 'FOR': 'Fortaleza',
+        'CNF': 'Belo Horizonte', 'CWB': 'Curitiba', 'POA': 'Porto Alegre',
+        'MAO': 'Manaus', 'SCL': 'Santiago', 'EZE': 'Buenos Aires', 'MIA': 'Miami',
+        'JFK': 'Nova York', 'LIS': 'Lisboa', 'LHR': 'Londres', 'CDG': 'Paris'
+    };
 
-  // Função para alternar entre busca e detalhes
-  function mostrarDetalhes(reserva) {
-    reservaAtual = reserva;
-    buscaDiv.style.display = 'none';
-    detalhesDiv.style.display = 'block';
-    limparMensagem();
+    function exibirMensagem(texto, tipo = 'erro') {
+        mensagemDiv.innerHTML = `<div class="mensagem-${tipo}">${texto}</div>`;
+    }
 
-    // Preencher dados do voo
-    vooNumeroSpan.textContent = reserva.voo.numero;
-    origemSpan.textContent = reserva.voo.origem;
-    destinoSpan.textContent = reserva.voo.destino;
-    dataVooSpan.textContent = reserva.voo.data;
-    horarioVooSpan.textContent = reserva.voo.horario;
-    portaoSpan.textContent = reserva.voo.portao || 'A definir';
+    function formatarData(dataISO) {
+        const [ano, mes, dia] = dataISO.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
 
-    // Preencher passageiros
-    let passageirosHtml = '';
-    reserva.passageiros.forEach(p => {
-      const assento = p.assento || (reserva.checkinRealizado ? 'Aguardando' : 'Não selecionado');
-      passageirosHtml += `
-        <div class="passageiro-item">
-          <span class="passageiro-nome">${p.nome}</span>
-          <span class="passageiro-assento">Assento: ${assento}</span>
-        </div>
-      `;
+    function mostrarDetalhes(reserva) {
+        reservaAtual = reserva;
+        buscaDiv.style.display = 'none';
+        detalhesDiv.style.display = 'block';
+        mensagemDiv.innerHTML = '';
+
+        const origemNome = siglaParaCidade[reserva.from] || reserva.from;
+        const destinoNome = siglaParaCidade[reserva.to] || reserva.to;
+
+        document.getElementById('origemVoo').textContent = reserva.from;
+        document.getElementById('destinoVoo').textContent = reserva.to;
+        document.getElementById('numeroVoo').textContent = `${reserva.airline} ${reserva.flightId}`;
+        document.getElementById('dataVoo').textContent = formatarData(reserva.date);
+        document.getElementById('horarioVoo').textContent = reserva.departure || '08:00 - 10:30';
+        document.getElementById('portao').textContent = reserva.portao || 'A definir';
+
+        // Lista de passageiros
+        const listaPassageiros = document.getElementById('listaPassageirosCheckin');
+        listaPassageiros.innerHTML = '';
+        reserva.passengers.forEach((p, i) => {
+            const li = document.createElement('li');
+            li.textContent = `${i+1}. ${p.nome} - Assento: ${p.assento || 'Não selecionado'}`;
+            listaPassageiros.appendChild(li);
+        });
+
+        // Status do check‑in
+        const statusSpan = document.getElementById('statusCheckin');
+        const btnConfirmar = document.getElementById('btnConfirmarCheckin');
+        const cartaoDiv = document.getElementById('cartaoEmbarque');
+
+        if (reserva.status === 'Check‑in realizado') {
+            statusSpan.textContent = 'Check‑in realizado';
+            statusSpan.style.background = '#dbeafe';
+            statusSpan.style.color = '#1e40af';
+            btnConfirmar.disabled = true;
+            btnConfirmar.textContent = 'Check‑in já realizado';
+            cartaoDiv.style.display = 'block';
+            preencherCartao(reserva);
+        } else {
+            statusSpan.textContent = 'Check‑in disponível';
+            statusSpan.style.background = '#dcfce7';
+            statusSpan.style.color = '#166534';
+            btnConfirmar.disabled = false;
+            btnConfirmar.textContent = 'Confirmar check‑in';
+            cartaoDiv.style.display = 'none';
+        }
+    }
+
+    function preencherCartao(reserva) {
+        const primeiroPassageiro = reserva.passengers[0];
+        document.getElementById('ciaCartao').textContent = reserva.airline;
+        document.getElementById('vooCartao').textContent = reserva.flightId;
+        document.getElementById('passageiroCartao').textContent = primeiroPassageiro.nome;
+        document.getElementById('rotaCartao').textContent = `${reserva.from} → ${reserva.to}`;
+        document.getElementById('dataCartao').textContent = formatarData(reserva.date);
+        document.getElementById('horarioCartao').textContent = reserva.departure || '08:00';
+        document.getElementById('assentoCartao').textContent = primeiroPassageiro.assento || 'Aguardando';
+        document.getElementById('portaoCartao').textContent = reserva.portao || 'A definir';
+    }
+
+    // Se veio localizador pela URL, busca automaticamente
+    if (localizadorUrl) {
+        const reservaEncontrada = historico.find(r => r.localizador === localizadorUrl.toUpperCase());
+        if (reservaEncontrada) {
+            mostrarDetalhes(reservaEncontrada);
+        } else {
+            exibirMensagem('Reserva não encontrada.', 'erro');
+        }
+    }
+
+    // Busca manual
+    formCheckin.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const localizador = document.getElementById('localizador').value.trim().toUpperCase();
+        const sobrenome = document.getElementById('sobrenome').value.trim().toUpperCase();
+
+        const reserva = historico.find(r => r.localizador === localizador);
+        if (!reserva) {
+            exibirMensagem('Reserva não encontrada.', 'erro');
+            return;
+        }
+
+        const primeiroPassageiro = reserva.passengers[0];
+        if (!primeiroPassageiro.nome.toUpperCase().includes(sobrenome)) {
+            exibirMensagem('Sobrenome não confere.', 'erro');
+            return;
+        }
+
+        mostrarDetalhes(reserva);
     });
-    listaPassageirosDiv.innerHTML = passageirosHtml;
 
-    // Atualizar status do check-in
-    const statusSpan = document.querySelector('.status-reserva');
-    if (reserva.checkinRealizado) {
-      statusSpan.textContent = 'Check-in realizado';
-      statusSpan.style.background = '#dbeafe';
-      statusSpan.style.color = '#1e40af';
-      btnRealizarCheckin.disabled = true;
-      btnRealizarCheckin.textContent = 'Check-in já realizado';
-      btnRealizarCheckin.style.background = '#94a3b8';
-      btnRealizarCheckin.style.cursor = 'not-allowed';
-    } else {
-      statusSpan.textContent = 'Check-in disponível';
-      statusSpan.style.background = '#dcfce7';
-      statusSpan.style.color = '#166534';
-      btnRealizarCheckin.disabled = false;
-      btnRealizarCheckin.textContent = 'Realizar check-in';
-      btnRealizarCheckin.style.background = '#10b981';
-      btnRealizarCheckin.style.cursor = 'pointer';
-    }
-  }
+    // Confirmar check‑in
+    document.getElementById('btnConfirmarCheckin').addEventListener('click', () => {
+        if (!reservaAtual) return;
 
-  function mostrarBusca() {
-    buscaDiv.style.display = 'block';
-    detalhesDiv.style.display = 'none';
-    reservaAtual = null;
-    formCheckin.reset();
-    limparMensagem();
-  }
+        // Atribuir portão aleatório (simulação)
+        reservaAtual.portao = `A${Math.floor(Math.random() * 20) + 1}`;
+        reservaAtual.status = 'Check‑in realizado';
 
-  // Evento de submit do formulário
-  formCheckin.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const localizador = document.getElementById('localizador').value.trim().toUpperCase();
-    const sobrenome = document.getElementById('sobrenome').value.trim().toUpperCase();
+        // Salvar no histórico
+        localStorage.setItem('historicoReservas', JSON.stringify(historico));
 
-    if (!localizador || !sobrenome) {
-      exibirMensagem('Por favor, preencha todos os campos.', 'erro');
-      return;
-    }
-
-    // Buscar reserva mockada
-    const reserva = reservasMock[localizador];
-    if (!reserva) {
-      exibirMensagem('Reserva não encontrada. Verifique o localizador e tente novamente.', 'erro');
-      return;
-    }
-
-    if (reserva.sobrenome !== sobrenome) {
-      exibirMensagem('Sobrenome não confere com a reserva informada.', 'erro');
-      return;
-    }
-
-    // Reserva encontrada
-    mostrarDetalhes(reserva);
-  });
-
-  // Botão "Buscar outra reserva"
-  btnOutraReserva.addEventListener('click', () => {
-    mostrarBusca();
-  });
-
-  // Botão "Realizar check-in"
-  btnRealizarCheckin.addEventListener('click', () => {
-    if (!reservaAtual) return;
-
-    if (reservaAtual.checkinRealizado) {
-      exibirMensagem('Check-in já foi realizado para esta reserva.', 'erro');
-      return;
-    }
-
-    // Simular realização do check-in
-    reservaAtual.checkinRealizado = true;
-    // Atribuir assentos aleatórios (simulação)
-    reservaAtual.passageiros.forEach(p => {
-      if (!p.assento) {
-        const letras = ['A', 'B', 'C', 'D', 'E', 'F'];
-        const numero = Math.floor(Math.random() * 30) + 1;
-        p.assento = `${numero}${letras[Math.floor(Math.random() * letras.length)]}`;
-      }
+        exibirMensagem('Check‑in realizado com sucesso! Bom voo! ✈️', 'sucesso');
+        mostrarDetalhes(reservaAtual);
     });
-    reservaAtual.voo.portao = `A${Math.floor(Math.random() * 20) + 1}`;
 
-    exibirMensagem('Check-in realizado com sucesso! Bom voo! ✈️', 'sucesso');
-    mostrarDetalhes(reservaAtual); // Atualiza a tela
-  });
+    // Buscar outra reserva
+    document.getElementById('btnBuscarOutro').addEventListener('click', () => {
+        buscaDiv.style.display = 'block';
+        detalhesDiv.style.display = 'none';
+        reservaAtual = null;
+        formCheckin.reset();
+        mensagemDiv.innerHTML = '';
+    });
 });

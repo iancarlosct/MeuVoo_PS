@@ -1,10 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeuVoo · Minhas Viagens</title>
+    <link rel="stylesheet" href="Styles/index.css">
+    <link rel="stylesheet" href="Styles/minhas-viagens.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="app-wrapper">
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">MeuVoo</div>
+            <div class="user-area" id="authHeaderArea"></div>
+        </div>
+    </header>
 
+    <nav class="nav-bar">
+        <ul class="nav-links">
+            <li><a href="../index.html">Passagens</a></li>
+            <li><a href="carrinho.html">Carrinho</a></li>
+            <li><a href="checkin.html">Check-in</a></li>
+            <li class="active"><a href="minhas-viagens.html">Minhas viagens</a></li>
+            <li><a href="ofertas.html">Ofertas</a></li>
+            <li><a href="ajuda.html">Ajuda</a></li>
+        </ul>
+    </nav>
+
+    <main class="viagens-main">
+        <div class="viagens-container">
+            <h1 class="viagens-titulo">Minhas Viagens</h1>
+            <div id="listaViagens" class="lista-viagens">
+                <!-- As reservas serão carregadas dinamicamente -->
+            </div>
+            <div id="mensagemVazio" class="mensagem-vazio" style="display: none;">
+                <p>🌍 Você ainda não possui viagens.</p>
+                <a href="../index.html" class="btn-buscar">Buscar passagens</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="Scripts/auth-header.js"></script>
+<script src="Scripts/minhas-viagens.js"></script>
 </body>
 </html>

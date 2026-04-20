@@ -1,309 +1,197 @@
-/* Estilos específicos para a página de check-in */
-
 .checkin-main {
-  flex: 1;
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
 }
 
 .checkin-container {
-  max-width: 800px;
-  width: 100%;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 32px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-  padding: 2.5rem;
-  border: 1px solid rgba(255,255,255,0.6);
+    max-width: 800px;
+    width: 100%;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(16px);
+    border-radius: 32px;
+    padding: 2rem;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.6);
 }
 
 .checkin-titulo {
-  font-size: 2rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  color: #0b1e3a;
-  margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: 650;
+    color: #0b1e3a;
+    margin-bottom: 0.5rem;
 }
 
 .checkin-subtitulo {
-  color: #475569;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
+    color: #475569;
+    margin-bottom: 2rem;
 }
 
-/* Formulário de busca */
 .form-checkin {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .input-group label {
-  font-weight: 600;
-  color: #1e293b;
+    font-weight: 600;
+    color: #1e293b;
 }
 
 .input-group input {
-  padding: 0.9rem 1rem;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 20px;
-  font-size: 1rem;
-  transition: border 0.2s, box-shadow 0.2s;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 1rem;
 }
 
-.input-group input:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
-}
-
-.input-group small {
-  color: #64748b;
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
+.btn-buscar, .btn-confirmar, .btn-outro {
+    padding: 1rem;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .btn-buscar {
-  background: #1e4bd2;
-  color: white;
-  border: none;
-  padding: 1rem;
-  border-radius: 40px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 8px 20px rgba(30, 75, 210, 0.25);
-  margin-top: 0.5rem;
+    background: #1e4bd2;
+    color: white;
+    box-shadow: 0 8px 20px rgba(30,75,210,0.25);
 }
 
-.btn-buscar:hover {
-  background: #0f2b8a;
-  transform: translateY(-2px);
-}
+.btn-buscar:hover { background: #0f2b8a; }
 
-/* Detalhes da reserva */
-.detalhes-reserva {
-  margin-top: 1rem;
+.detalhes-reserva { margin-top: 2rem; }
+
+.reserva-card {
+    background: #f8fafc;
+    border-radius: 24px;
+    padding: 2rem;
+    border: 1px solid #e2e8f0;
 }
 
 .reserva-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
 }
 
-.reserva-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #0b1e3a;
+.status-badge {
+    background: #dcfce7;
+    color: #166534;
+    padding: 0.4rem 1rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
-.status-reserva {
-  background: #dcfce7;
-  color: #166534;
-  padding: 0.4rem 1rem;
-  border-radius: 40px;
-  font-weight: 600;
-  font-size: 0.9rem;
+.rota-grande {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0b1e3a;
+    margin-bottom: 1rem;
 }
 
-.voo-card {
-  background: #f8fafc;
-  border-radius: 24px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  border: 1px solid #e2e8f0;
+.icone-voo { margin: 0 1rem; color: #1e4bd2; }
+
+.info-voo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
 }
 
-.voo-cabecalho {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
+.info-voo .label {
+    font-weight: 600;
+    color: #64748b;
+    margin-right: 0.5rem;
 }
 
-.cia-info {
-  display: flex;
-  flex-direction: column;
+.lista-simples {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
 }
 
-.cia-nome {
-  font-weight: 700;
-  color: #0f2b5e;
+.lista-simples li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.voo-codigo {
-  font-size: 0.9rem;
-  color: #64748b;
+.cartao-embarque {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #cbd5e1;
 }
 
-.rota-info {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
+.cartao-conteudo { font-family: 'Courier New', monospace; }
+
+.cartao-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 
-.seta {
-  color: #2563eb;
-  font-size: 1.5rem;
+.cartao-passageiro { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.cartao-rota { font-size: 1.4rem; font-weight: bold; margin-bottom: 1rem; }
+
+.cartao-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.voo-detalhes {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.detalhe-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.detalhe-item .label {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  color: #64748b;
-  letter-spacing: 0.03em;
-}
-
-.detalhe-item .valor {
-  font-weight: 600;
-  color: #0b1e3a;
-  font-size: 1.1rem;
-}
-
-/* Lista de passageiros */
-.passageiros-lista h3 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: #1e293b;
-}
-
-.lista-passageiros {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-bottom: 2rem;
-}
-
-.passageiro-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.8rem 1.2rem;
-  background: white;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-}
-
-.passageiro-nome {
-  flex: 1;
-  font-weight: 500;
-}
-
-.passageiro-assento {
-  color: #2563eb;
-  font-weight: 600;
+.codigo-barras {
+    background: repeating-linear-gradient(90deg, #000, #000 2px, #fff 2px, #fff 4px);
+    height: 60px;
+    width: 100%;
+    border-radius: 8px;
 }
 
 .checkin-acoes {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
-.btn-checkin {
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 40px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
-  flex: 2;
-  min-width: 200px;
+.btn-confirmar {
+    background: #10b981;
+    color: white;
+    flex: 2;
 }
 
-.btn-checkin:hover {
-  background: #059669;
-  transform: translateY(-2px);
+.btn-confirmar:hover { background: #059669; }
+
+.btn-outro {
+    background: #e2e8f0;
+    color: #334155;
+    flex: 1;
 }
 
-.btn-voltar {
-  background: transparent;
-  border: 1.5px solid #cbd5e1;
-  color: #475569;
-  padding: 1rem 2rem;
-  border-radius: 40px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  flex: 1;
-}
+.btn-outro:hover { background: #cbd5e1; }
 
-.btn-voltar:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-}
+.mensagem-feedback { margin-top: 1.5rem; text-align: center; }
 
-/* Mensagens */
-.mensagem-checkin {
-  margin-top: 1.5rem;
-  text-align: center;
-  min-height: 3rem;
-}
+.mensagem-erro { background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 20px; }
+.mensagem-sucesso { background: #dcfce7; color: #166534; padding: 1rem; border-radius: 20px; }
 
-.mensagem-erro {
-  background: #fee2e2;
-  color: #b91c1c;
-  padding: 1rem;
-  border-radius: 20px;
-  font-weight: 500;
-}
-
-.mensagem-sucesso {
-  background: #dcfce7;
-  color: #166534;
-  padding: 1rem;
-  border-radius: 20px;
-  font-weight: 500;
-}
-
-/* Responsivo */
 @media (max-width: 600px) {
-  .checkin-main {
-    padding: 1rem;
-  }
-  .checkin-container {
-    padding: 1.5rem;
-  }
-  .voo-cabecalho {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .checkin-acoes {
-    flex-direction: column;
-  }
+    .checkin-main { padding: 1rem; }
+    .checkin-container { padding: 1.5rem; }
+    .rota-grande { font-size: 1.5rem; }
+    .checkin-acoes { flex-direction: column; }
 }

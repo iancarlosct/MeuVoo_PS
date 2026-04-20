@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeuVoo · Check-in</title>
+    <title>MeuVoo · Check‑in</title>
     <link rel="stylesheet" href="Styles/index.css">
     <link rel="stylesheet" href="Styles/checkin.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
@@ -13,9 +13,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo">MeuVoo</div>
-            <div class="user-area" id="authHeaderArea">
-                <!-- Será preenchido dinamicamente pelo auth-header.js -->
-            </div>
+            <div class="user-area" id="authHeaderArea"></div>
         </div>
     </header>
 
@@ -32,80 +30,85 @@
 
     <main class="checkin-main">
         <div class="checkin-container">
-            <h1 class="checkin-titulo">Check-in online</h1>
-            <p class="checkin-subtitulo">Informe os dados da sua reserva para iniciar o check-in.</p>
+            <h1 class="checkin-titulo">Check‑in Online</h1>
+            <p class="checkin-subtitulo">Confirme sua presença e obtenha seu cartão de embarque.</p>
 
-            <!-- Formulário de busca da reserva -->
+            <!-- Área de busca por localizador (caso não venha pela URL) -->
             <div id="buscaReserva" class="busca-reserva">
                 <form id="formCheckin" class="form-checkin">
                     <div class="input-group">
                         <label for="localizador">Localizador da reserva</label>
-                        <input type="text" id="localizador" name="localizador" placeholder="Ex: ABC123" required maxlength="6" style="text-transform: uppercase;">
-                        <small>O código de 6 letras/números enviado no e-mail</small>
+                        <input type="text" id="localizador" placeholder="Ex: ABC123" maxlength="6" required>
                     </div>
                     <div class="input-group">
-                        <label for="sobrenome">Sobrenome do passageiro</label>
-                        <input type="text" id="sobrenome" name="sobrenome" placeholder="Ex: Silva" required>
+                        <label for="sobrenome">Sobrenome do passageiro principal</label>
+                        <input type="text" id="sobrenome" placeholder="Ex: Silva" required>
                     </div>
                     <button type="submit" class="btn-buscar">Buscar reserva</button>
                 </form>
             </div>
 
-            <!-- Área de detalhes da reserva (inicialmente oculta) -->
+            <!-- Detalhes da reserva e cartão de embarque -->
             <div id="detalhesReserva" class="detalhes-reserva" style="display: none;">
-                <div class="reserva-header">
-                    <h2>Detalhes da sua viagem</h2>
-                    <span class="status-reserva">Check-in disponível</span>
-                </div>
-
-                <div class="voo-card">
-                    <div class="voo-cabecalho">
-                        <div class="cia-info">
-                            <span class="cia-nome">MeuVoo Linhas Aéreas</span>
-                            <span class="voo-codigo">Voo <span id="vooNumero">MV 1234</span></span>
+                <div class="reserva-card">
+                    <div class="reserva-header">
+                        <h2>Sua viagem</h2>
+                        <span class="status-badge" id="statusCheckin">Check‑in disponível</span>
+                    </div>
+                    <div class="voo-resumo">
+                        <div class="rota-grande">
+                            <span id="origemVoo">GRU</span>
+                            <span class="icone-voo">✈️</span>
+                            <span id="destinoVoo">REC</span>
                         </div>
-                        <div class="rota-info">
-                            <span id="origem">GRU (São Paulo)</span>
-                            <span class="seta">→</span>
-                            <span id="destino">REC (Recife)</span>
+                        <div class="info-voo">
+                            <div><span class="label">Voo:</span> <span id="numeroVoo">MV 1234</span></div>
+                            <div><span class="label">Data:</span> <span id="dataVoo">20/05/2026</span></div>
+                            <div><span class="label">Horário:</span> <span id="horarioVoo">08:45 - 11:20</span></div>
+                            <div><span class="label">Portão:</span> <span id="portao">A definir</span></div>
                         </div>
                     </div>
-                    <div class="voo-detalhes">
-                        <div class="detalhe-item">
-                            <span class="label">Data</span>
-                            <span class="valor" id="dataVoo">20/05/2026</span>
-                        </div>
-                        <div class="detalhe-item">
-                            <span class="label">Horário</span>
-                            <span class="valor" id="horarioVoo">08:45 - 11:20</span>
-                        </div>
-                        <div class="detalhe-item">
-                            <span class="label">Portão</span>
-                            <span class="valor" id="portao">A definir</span>
+
+                    <div class="passageiros-checkin">
+                        <h3>Passageiros</h3>
+                        <ul id="listaPassageirosCheckin" class="lista-simples"></ul>
+                    </div>
+
+                    <!-- Cartão de embarque (inicialmente oculto) -->
+                    <div id="cartaoEmbarque" class="cartao-embarque" style="display: none;">
+                        <h3>🎫 Cartão de Embarque</h3>
+                        <div class="cartao-conteudo">
+                            <div class="cartao-header">
+                                <span class="cia-cartao" id="ciaCartao">LATAM</span>
+                                <span class="voo-cartao" id="vooCartao">MV 1234</span>
+                            </div>
+                            <div class="cartao-passageiro" id="passageiroCartao">João Silva</div>
+                            <div class="cartao-rota" id="rotaCartao">GRU → REC</div>
+                            <div class="cartao-info">
+                                <div><span>Data:</span> <span id="dataCartao">20/05/2026</span></div>
+                                <div><span>Horário:</span> <span id="horarioCartao">08:45</span></div>
+                                <div><span>Assento:</span> <span id="assentoCartao">12A</span></div>
+                                <div><span>Portão:</span> <span id="portaoCartao">A12</span></div>
+                            </div>
+                            <div class="cartao-codigo">
+                                <div id="codigoBarras" class="codigo-barras"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="passageiros-lista">
-                    <h3>Passageiros</h3>
-                    <div id="listaPassageiros" class="lista-passageiros">
-                        <!-- Inseridos via JS -->
+                    <div class="checkin-acoes">
+                        <button class="btn-confirmar" id="btnConfirmarCheckin">Confirmar check‑in</button>
+                        <button class="btn-outro" id="btnBuscarOutro">Buscar outra reserva</button>
                     </div>
-                </div>
-
-                <div class="checkin-acoes">
-                    <button class="btn-checkin" id="btnRealizarCheckin">Realizar check-in</button>
-                    <button class="btn-voltar" id="btnOutraReserva">Buscar outra reserva</button>
                 </div>
             </div>
 
-            <!-- Mensagem de erro/sucesso -->
-            <div id="mensagemCheckin" class="mensagem-checkin"></div>
+            <div id="mensagemFeedback" class="mensagem-feedback"></div>
         </div>
     </main>
 </div>
 
-<script src="Scripts/checkin.js"></script>
 <script src="Scripts/auth-header.js"></script>
+<script src="Scripts/checkin.js"></script>
 </body>
 </html>
