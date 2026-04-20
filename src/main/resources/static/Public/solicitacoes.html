@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeuVoo · Entrar</title>
+    <title>MeuVoo · Solicitações Especiais</title>
     <link rel="stylesheet" href="Styles/index.css">
-    <link rel="stylesheet" href="Styles/auth.css">
+    <link rel="stylesheet" href="Styles/solicitacoes.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,7 @@
         <div class="header-container">
             <div class="logo">MeuVoo</div>
             <div class="user-area" id="authHeaderArea">
-                <!-- Será preenchido dinamicamente -->
+                <!-- Será preenchido dinamicamente pelo auth-header.js -->
             </div>
         </div>
     </header>
@@ -30,26 +30,24 @@
         </ul>
     </nav>
 
-    <main class="auth-main">
-        <div class="auth-container">
-            <h1 class="auth-titulo">Entrar na sua conta</h1>
-            <form id="loginForm" class="auth-form">
-                <div class="input-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" required autocomplete="email">
+    <main class="solicitacoes-main">
+        <div class="solicitacoes-container">
+            <h1 class="solicitacoes-titulo">Solicitações Especiais</h1>
+            <div id="vooInfo" class="voo-info-resumo"></div>
+
+            <form id="formSolicitacoes">
+                <div id="listaPassageiros" class="lista-passageiros"></div>
+
+                <div class="solicitacoes-acoes">
+                    <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar" id="btnSalvar">Salvar</button>
                 </div>
-                <div class="input-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn-auth">Entrar</button>
-                <p class="auth-link">Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
             </form>
-            <div id="mensagem" class="mensagem-auth"></div>
         </div>
     </main>
 </div>
-<script src="Scripts/login.js"></script>
+
+<script src="Scripts/solicitacoes.js"></script>
 <script src="Scripts/auth-header.js"></script>
 </body>
 </html>

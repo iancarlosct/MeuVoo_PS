@@ -2,6 +2,7 @@ package com.decolar.sistema_voos.service;
 
 import com.decolar.sistema_voos.entity.Flight;
 import com.decolar.sistema_voos.entity.FlightClass;
+import com.decolar.sistema_voos.entity.Seat;
 import com.decolar.sistema_voos.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,7 +114,7 @@ public class FlightService {
         Random rand = new Random();
         List<Flight> flights = new ArrayList<>();
 
-        int totalVoos = 1000;
+        int totalVoos = 5000;
         for (int i = 0; i < totalVoos; i++) {
             String origem = origens[rand.nextInt(origens.length)];
             String destino;
@@ -148,6 +149,20 @@ public class FlightService {
             voo.setPrice(precoFinal);
             voo.setFlightClass(classe);
             voo.setAvailableSeats(assentos);
+
+            // ========== Criar assentos para este voo ==========
+            int totalAssentos = assentos; // quantidade gerada aleatoriamente
+            for (int j = 0; j < totalAssentos; j++) {
+                int fileira = (j / 6) + 1;
+                char letra = (char) ('A' + (j % 6));
+                String seatNumber = fileira + String.valueOf(letra);
+
+                Seat seat = new Seat();
+                seat.setSeatNumber(seatNumber);
+                seat.setAvailable(true);
+                seat.setFlight(voo);
+                voo.getSeats().add(seat); // <-- Adiciona à lista do voo (cascade)
+            }
 
             flights.add(voo);
         }

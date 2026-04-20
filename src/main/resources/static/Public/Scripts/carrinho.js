@@ -1,32 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // ---------- Dados mockados iniciais (simulando itens no carrinho) ----------
-  // Em produção, esses dados viriam do backend ou localStorage.
-  const carrinhoMock = [
-    {
-      id: 1,
-      origem: 'São Paulo (GRU)',
-      destino: 'Recife (REC)',
-      dataIda: '2026-05-20',
-      passageiros: 2,
-      classe: 'Econômica',
-      precoUnitario: 174.00,
-      quantidade: 1
-    },
-    {
-      id: 2,
-      origem: 'Rio de Janeiro (GIG)',
-      destino: 'Santiago (SCL)',
-      dataIda: '2026-06-10',
-      passageiros: 1,
-      classe: 'Executiva',
-      precoUnitario: 710.00,
-      quantidade: 2
-    }
-  ];
-
-  // Usar localStorage se existir, senão inicializar com mock
-  let carrinho = JSON.parse(localStorage.getItem('carrinhoMeuVoo')) || carrinhoMock;
-
   // Elementos
   const containerItens = document.getElementById('itensCarrinho');
   const divVazio = document.getElementById('carrinhoVazio');
@@ -36,8 +8,47 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalSpan = document.getElementById('total');
   const btnFinalizar = document.getElementById('btnFinalizar');
 
-  // Taxa fixa simulada (pode ser percentual)
+  // Taxa fixa simulada
   const TAXA_FIXA = 45.90;
+
+  // Carregar carrinho do localStorage (sem mock)
+  let carrinho = JSON.parse(localStorage.getItem('carrinhoMeuVoo')) || [];
+
+  // Mapeamento sigla -> nome da cidade (para exibição)
+  const siglaParaCidade = {
+    'GRU': 'São Paulo',
+    'CGH': 'São Paulo (Congonhas)',
+    'VCP': 'Campinas',
+    'GIG': 'Rio de Janeiro (Galeão)',
+    'SDU': 'Rio de Janeiro (Santos Dumont)',
+    'BSB': 'Brasília',
+    'SSA': 'Salvador',
+    'REC': 'Recife',
+    'FOR': 'Fortaleza',
+    'CNF': 'Belo Horizonte',
+    'PLU': 'Belo Horizonte (Pampulha)',
+    'CWB': 'Curitiba',
+    'POA': 'Porto Alegre',
+    'MAO': 'Manaus',
+    'SCL': 'Santiago',
+    'EZE': 'Buenos Aires',
+    'MIA': 'Miami',
+    'JFK': 'Nova York',
+    'LIS': 'Lisboa',
+    'LHR': 'Londres',
+    'CDG': 'Paris',
+    'LIM': 'Lima',
+    'FCO': 'Roma'
+  };
+
+  function obterNomeCidade(sigla) {
+    return siglaParaCidade[sigla] || sigla;
+  }
+
+  function formatarData(dataISO) {
+    const [ano, mes, dia] = dataISO.split('-');
+    return `${dia}/${mes}/${ano}`;
+  }
 
   // ---------- Funções ----------
   function salvarCarrinho() {
@@ -45,7 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function calcularTotais() {
-    const subtotal = carrinho.reduce((acc, item) => acc + (item.precoUnitario * item.quantidade), 0);
+    const subtotal = carrinho.reduce((acc, item) => {
+      const totalItem = item.totalPrice || (item.basePrice * item.passengers.length);
+      return acc + totalItem;
+    }, 0);
     const taxas = carrinho.length > 0 ? TAXA_FIXA : 0;
     const total = subtotal + taxas;
     return { subtotal, taxas, total };
@@ -56,6 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalSpan.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
     taxasSpan.textContent = `R$ ${taxas.toFixed(2).replace('.', ',')}`;
     totalSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+  }
+
+  function removerItem(index) {
+    carrinho.splice(index, 1);
+    salvarCarrinho();
+    renderizarCarrinho();
   }
 
   function renderizarCarrinho() {
@@ -70,83 +90,85 @@ document.addEventListener('DOMContentLoaded', () => {
     resumoDiv.style.display = 'block';
 
     let html = '';
-    carrinho.forEach(item => {
-      const totalItem = item.precoUnitario * item.quantidade;
+    carrinho.forEach((item, index) => {
+      const dataFormatada = formatarData(item.date);
+      const precoUnitario = item.basePrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const totalItemValue = item.totalPrice || (item.basePrice * item.passengers.length);
+      const totalItem = totalItemValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const classeFormatada = item.flightClass === 'ECONOMICA' ? 'Econômica' : 'Executiva';
+      const numPassageiros = item.passengers.length;
+
       html += `
-        <div class="item-carrinho" data-id="${item.id}">
+        <div class="item-carrinho" data-index="${index}">
           <div class="item-info">
-            <div class="item-rota">${item.origem} → ${item.destino}</div>
+            <div class="item-rota">${obterNomeCidade(item.from)} → ${obterNomeCidade(item.to)}</div>
             <div class="item-detalhes">
-              <span>📅 ${formatarData(item.dataIda)}</span>
-              <span>👤 ${item.passageiros} ${item.passageiros > 1 ? 'passageiros' : 'passageiro'}</span>
-              <span>💺 ${item.classe}</span>
+              <span>📅 ${dataFormatada} • ${item.departure || ''}</span>
+              <span>✈️ ${item.airline} • ${classeFormatada}</span>
+              <span>👤 ${numPassageiros} ${numPassageiros > 1 ? 'passageiros' : 'passageiro'}</span>
             </div>
+            <div class="item-preco-unitario">Preço unitário: ${precoUnitario}</div>
           </div>
           <div class="item-acoes">
-            <div class="item-preco">R$ ${totalItem.toFixed(2).replace('.', ',')}</div>
-            <div class="quantidade-controle">
-              <button class="quantidade-btn" data-action="decrement">−</button>
-              <span class="quantidade-numero">${item.quantidade}</span>
-              <button class="quantidade-btn" data-action="increment">+</button>
+            <div class="item-preco-total">Total: ${totalItem}</div>
+            <div class="acoes-personalizacao">
+              <button class="btn-personalizar" data-index="${index}" data-acao="assentos">💺 Assentos</button>
+              <button class="btn-personalizar" data-index="${index}" data-acao="bagagens">🧳 Bagagens</button>
+              <button class="btn-personalizar" data-index="${index}" data-acao="solicitacoes">♿ Solicitações</button>
             </div>
-            <button class="btn-remover" data-action="remove">Remover</button>
+            <button class="btn-remover" data-index="${index}">Remover</button>
           </div>
         </div>
       `;
     });
     containerItens.innerHTML = html;
     atualizarResumo();
-    adicionarEventosItens();
+    adicionarEventos();
   }
 
-  function formatarData(dataISO) {
-    const [ano, mes, dia] = dataISO.split('-');
-    return `${dia}/${mes}/${ano}`;
-  }
-
-  function adicionarEventosItens() {
-    document.querySelectorAll('.item-carrinho').forEach(itemDiv => {
-      const id = parseInt(itemDiv.dataset.id);
-      const item = carrinho.find(i => i.id === id);
-
-      // Botões de quantidade
-      itemDiv.querySelector('[data-action="increment"]')?.addEventListener('click', () => {
-        if (item) {
-          item.quantidade++;
-          salvarCarrinho();
-          renderizarCarrinho();
-        }
+  function adicionarEventos() {
+    // Remover item
+    document.querySelectorAll('.btn-remover').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const index = e.target.dataset.index;
+        if (index !== undefined) removerItem(parseInt(index));
       });
+    });
 
-      itemDiv.querySelector('[data-action="decrement"]')?.addEventListener('click', () => {
-        if (item && item.quantidade > 1) {
-          item.quantidade--;
-          salvarCarrinho();
-          renderizarCarrinho();
+    // Personalizações
+    document.querySelectorAll('.btn-personalizar').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const acao = e.target.dataset.acao;
+        const index = e.target.dataset.index;
+        const item = carrinho[index];
+
+        if (acao === 'assentos') {
+            window.location.href = `selecao-assentos.html?item=${index}`;
+        } else if (acao === 'bagagens') {
+            window.location.href = `bagagens.html?item=${index}`;
+        } else if (acao === 'solicitacoes') {
+            window.location.href = `solicitacoes.html?item=${index}`;
+        } else {
+            alert(`Funcionalidade de ${acao} para o voo ${obterNomeCidade(item.from)} → ${obterNomeCidade(item.to)} será implementada em breve.`);
         }
-      });
-
-      // Botão remover
-      itemDiv.querySelector('[data-action="remove"]')?.addEventListener('click', () => {
-        carrinho = carrinho.filter(i => i.id !== id);
-        salvarCarrinho();
-        renderizarCarrinho();
       });
     });
   }
 
-  // Finalizar compra (simulação)
+  // Finalizar compra (redireciona para dados dos passageiros após login)
   btnFinalizar.addEventListener('click', () => {
     if (carrinho.length === 0) {
       alert('Seu carrinho está vazio.');
       return;
     }
-    const { total } = calcularTotais();
-    alert(`Compra finalizada! Total: R$ ${total.toFixed(2).replace('.', ',')}\nObrigado por voar com a MeuVoo!`);
-    // Limpar carrinho após finalizar (opcional)
-    carrinho = [];
-    salvarCarrinho();
-    renderizarCarrinho();
+    // Verificar se há usuário logado
+    const usuario = JSON.parse(localStorage.getItem('usuarioMeuVoo'));
+    if (!usuario) {
+      alert('Faça login para continuar.');
+      window.location.href = 'login.html';
+      return;
+    }
+    window.location.href = 'dados-passageiros.html';
   });
 
   // Inicializar renderização

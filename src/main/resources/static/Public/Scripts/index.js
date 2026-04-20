@@ -247,7 +247,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ---------- Exibir resultados ----------
+  // Variável global para guardar os últimos voos exibidos (usada no evento de clique)
+  let ultimosVoosExibidos = [];
+
   function exibirVoos(voos) {
+    ultimosVoosExibidos = voos;
     if (!voos || voos.length === 0) {
       qtdResultados.textContent = 'Nenhum voo encontrado';
       listaVoos.innerHTML = '<p class="sem-resultados">😕 Nenhum voo encontrado para os critérios informados.</p>';
@@ -338,6 +342,52 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error(error);
       alert('Erro ao buscar voos. Verifique se o servidor está rodando.');
     }
+  });
+
+  // ---------- Adicionar voo ao carrinho (clique no botão "Selecionar") ----------
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-selecionar');
+    if (!btn) return;
+
+    const vooId = btn.dataset.id;
+    const vooSelecionado = ultimosVoosExibidos.find(v => v.id === vooId);
+    if (!vooSelecionado) {
+      alert('Voo não encontrado.');
+      return;
+    }
+
+    let passageiros, classe;
+    if (currentMode === 'route') {
+      passageiros = adults;
+      classe = selectedClass;
+    } else {
+      passageiros = priceAdults;
+      classe = 'ECONOMICA'; // modo preço assume econômica
+    }
+
+    const itemCarrinho = {
+      flightId: vooSelecionado.id,
+      from: vooSelecionado.from,
+      to: vooSelecionado.to,
+      date: vooSelecionado.date,
+      departure: vooSelecionado.departure,
+      airline: vooSelecionado.airline,
+      flightClass: vooSelecionado.flightClass,
+      basePrice: vooSelecionado.price,
+      passengers: Array.from({ length: passageiros }, () => ({
+        name: '',
+        seat: null,
+        baggage: { hand: true, checked15: false, checked23: false },
+        specialRequests: []
+      })),
+      totalPrice: vooSelecionado.price * passageiros
+    };
+
+    let carrinho = JSON.parse(localStorage.getItem('carrinhoMeuVoo')) || [];
+    carrinho.push(itemCarrinho);
+    localStorage.setItem('carrinhoMeuVoo', JSON.stringify(carrinho));
+
+    alert(`Voo ${obterNomeCidade(itemCarrinho.from)} → ${obterNomeCidade(itemCarrinho.to)} adicionado ao carrinho!`);
   });
 
   // Carregar cidades dinamicamente para o datalist (opcional)

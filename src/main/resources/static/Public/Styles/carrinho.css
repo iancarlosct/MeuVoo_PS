@@ -79,12 +79,51 @@
   gap: 0.3rem;
 }
 
+/* Novo: Preço unitário */
+.item-preco-unitario {
+  font-size: 0.9rem;
+  color: #475569;
+  margin-top: 0.2rem;
+}
+
 .item-acoes {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
+/* Novo: Preço total do item */
+.item-preco-total {
+  font-weight: 700;
+  color: #1e4bd2;
+  margin-right: 0.5rem;
+}
+
+/* Novo: Container dos botões de personalização */
+.acoes-personalizacao {
+  display: flex;
+  gap: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Novo: Botões de personalização */
+.btn-personalizar {
+  background: #f1f5f9;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-personalizar:hover {
+  background: #e2e8f0;
+}
+
+/* Preço antigo (mantido para compatibilidade, mas não usado agora) */
 .item-preco {
   font-weight: 700;
   font-size: 1.4rem;
@@ -233,5 +272,8 @@
   .item-acoes {
     width: 100%;
     justify-content: space-between;
+  }
+  .acoes-personalizacao {
+    flex-wrap: wrap;
   }
 }

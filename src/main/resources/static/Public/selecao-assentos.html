@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeuVoo · Escolher Assentos</title>
+    <link rel="stylesheet" href="Styles/index.css">
+    <link rel="stylesheet" href="Styles/assentos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-wrapper">
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">MeuVoo</div>
+            <div class="user-area" id="authHeaderArea">
+                <!-- Será preenchido dinamicamente pelo auth-header.js -->
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <ul class="nav-links">
+            <li><a href="../index.html">Passagens</a></li>
+            <li><a href="carrinho.html">Carrinho</a></li>
+            <li><a href="checkin.html">Check-in</a></li>
+            <li><a href="minhas-viagens.html">Minhas viagens</a></li>
+            <li><a href="ofertas.html">Ofertas</a></li>
+            <li><a href="ajuda.html">Ajuda</a></li>
+        </ul>
+    </nav>
+
+    <main class="assentos-main">
+        <div class="assentos-container">
+            <h1 class="assentos-titulo">Escolha seus assentos</h1>
+            <div id="vooInfo" class="voo-info-resumo"></div>
+
+            <div id="passageirosTabs" class="passageiros-tabs"></div>
+
+            <div class="mapa-assentos-container">
+                <div class="legenda">
+                    <span><span class="assento disponivel"></span> Disponível</span>
+                    <span><span class="assento ocupado"></span> Ocupado</span>
+                    <span><span class="assento selecionado"></span> Selecionado</span>
+                </div>
+                <div id="mapaAssentos" class="mapa-assentos"></div>
+            </div>
+
+            <div class="assentos-acoes">
+                <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                <button class="btn-confirmar" id="btnConfirmar">Confirmar assentos</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="Scripts/assentos.js"></script>
+<script src="Scripts/auth-header.js"></script>
+</body>
+</html>

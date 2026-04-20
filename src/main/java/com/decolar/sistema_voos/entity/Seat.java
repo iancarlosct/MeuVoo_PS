@@ -1,14 +1,38 @@
-public class Seat {
-    private String seatNumber;
-    private String classType;
-    private boolean isOccupied;
-    private double price;
+package com.decolar.sistema_voos.entity;
 
-    public Seat(String seatNumber, String classType, boolean isOccupied, double price) {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+@Entity
+public class Seat {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String seatNumber;
+    private boolean available;
+
+    @ManyToOne
+    @JoinColumn(name = "flight_id", nullable = false)
+    @JsonIgnore   // <--- ADICIONADO
+    private Flight flight;
+
+    // Construtores
+    public Seat() {}
+
+    public Seat(String seatNumber, boolean available, Flight flight) {
         this.seatNumber = seatNumber;
-        this.classType = classType;
-        this.isOccupied = isOccupied;
-        this.price = price;
+        this.available = available;
+        this.flight = flight;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSeatNumber() {
@@ -19,27 +43,19 @@ public class Seat {
         this.seatNumber = seatNumber;
     }
 
-    public String getClassType() {
-        return classType;
+    public boolean isAvailable() {
+        return available;
     }
 
-    public void setClassType(String classType) {
-        this.classType = classType;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
-    public boolean isOccupied() {
-        return isOccupied;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setOccupied(boolean occupied) {
-        isOccupied = occupied;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 }

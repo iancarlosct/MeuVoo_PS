@@ -674,3 +674,24 @@ body {
     width: 100%;
   }
 }
+
+.user-greeting {
+    margin-right: 1rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.btn-logout {
+    background: transparent;
+    border: 1.5px solid #dc2626;
+    color: #dc2626;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-logout:hover {
+    background: #fee2e2;
+}

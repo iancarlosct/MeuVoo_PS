@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeuVoo · Dados dos Passageiros</title>
+    <link rel="stylesheet" href="Styles/index.css">
+    <link rel="stylesheet" href="Styles/dados-passageiros.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-wrapper">
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">MeuVoo</div>
+            <div class="user-area" id="userArea"></div>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <ul class="nav-links">
+            <li><a href="../index.html">Passagens</a></li>
+            <li><a href="carrinho.html">Carrinho</a></li>
+            <li><a href="checkin.html">Check-in</a></li>
+            <li><a href="minhas-viagens.html">Minhas viagens</a></li>
+            <li><a href="ofertas.html">Ofertas</a></li>
+            <li><a href="ajuda.html">Ajuda</a></li>
+        </ul>
+    </nav>
+
+    <main class="dados-main">
+        <div class="dados-container">
+            <h1 class="dados-titulo">Dados dos Passageiros</h1>
+            <p>Preencha os dados de todos os passageiros para concluir a reserva.</p>
+
+            <div id="reservasContainer"></div>
+
+            <div class="dados-acoes">
+                <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                <button class="btn-confirmar" id="btnConfirmar">Confirmar reserva</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="Scripts/dados-passageiros.js"></script>
+<script src="Scripts/auth-header.js"></script>
+</body>
+</html>

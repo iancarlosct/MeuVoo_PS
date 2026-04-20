@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Flight {
@@ -33,6 +35,10 @@ public class Flight {
 
     private Integer availableSeats; // assentos disponíveis (para controle de lotação)
 
+    // NOVO: Relacionamento com assentos
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seat> seats = new ArrayList<>();
+
     // Construtor padrão (obrigatório para JPA)
     public Flight() {
     }
@@ -50,6 +56,8 @@ public class Flight {
         this.flightClass = flightClass;
         this.availableSeats = availableSeats;
     }
+
+    // Getters e Setters existentes...
 
     public String getId() {
         return id;
@@ -121,5 +129,14 @@ public class Flight {
 
     public void setAvailableSeats(Integer availableSeats) {
         this.availableSeats = availableSeats;
+    }
+
+    // NOVO: Getter e Setter para seats
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
     }
 }
