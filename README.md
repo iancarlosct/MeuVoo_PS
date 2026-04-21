@@ -33,7 +33,7 @@ A maneira mais simples é abrir o projeto no **IntelliJ IDEA**.
 4. **Clone o repositório** com o comando:
    
    ```bash
-   git clone https://github.com/iancarlosct/ProjetoOO-Descolar
+   git clone https://github.com/iancarlosct/MeuVoo_PS
    
 5. **Aguarde o IntelliJ carregar o projeto e baixar as dependências automaticamente** (isso pode levar alguns minutos).
 
