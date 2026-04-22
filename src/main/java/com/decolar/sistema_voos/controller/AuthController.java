@@ -1,3 +1,11 @@
+/*
+ * AuthController.java
+ *
+ * Controller responsável pelos endpoints de autenticação (registro e login).
+ * Recebe requisições do frontend, delega a lógica de negócio ao AuthService
+ * e retorna respostas adequadas em caso de sucesso ou erro.
+ */
+
 package com.decolar.sistema_voos.controller;
 
 import com.decolar.sistema_voos.dto.LoginRequest;
@@ -16,6 +24,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    /**
+     * Endpoint para cadastro de novo usuário.
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
@@ -26,6 +37,9 @@ public class AuthController {
         }
     }
 
+    /**
+     * Endpoint para autenticação de usuário existente.
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {

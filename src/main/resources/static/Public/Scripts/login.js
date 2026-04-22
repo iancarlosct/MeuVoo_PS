@@ -1,15 +1,27 @@
+/*
+ * login.js
+ *
+ * Lógica da página de login. Captura as credenciais do usuário, envia para o
+ * endpoint de autenticação e, em caso de sucesso, armazena os dados do usuário
+ * no localStorage e redireciona para a página inicial.
+ */
+
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // ---------- CAPTURA DOS DADOS DO FORMULÁRIO ----------
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const mensagemDiv = document.getElementById('mensagem');
 
+    // ---------- ENVIO DA REQUISIÇÃO PARA O BACKEND ----------
     try {
         const response = await fetch('http://localhost:8080/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
+
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem('usuarioMeuVoo', JSON.stringify(data));

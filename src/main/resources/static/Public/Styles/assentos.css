@@ -1,5 +1,12 @@
-/* Estilos para a página de seleção de assentos */
+/*
+ * assentos.css
+ *
+ * Estilos para a página de seleção de assentos.
+ * Define a aparência do mapa de assentos interativo, legendas,
+ * abas de passageiros e botões de ação.
+ */
 
+/* ---------- CONTAINER PRINCIPAL ---------- */
 .assentos-main {
     flex: 1;
     padding: 2rem;
@@ -18,6 +25,7 @@
     border: 1px solid rgba(255,255,255,0.6);
 }
 
+/* ---------- CABEÇALHO E INFORMAÇÕES DO VOO ---------- */
 .assentos-titulo {
     font-size: 2rem;
     font-weight: 650;
@@ -35,6 +43,7 @@
     color: #1e293b;
 }
 
+/* ---------- ABAS DE PASSAGEIROS ---------- */
 .passageiros-tabs {
     display: flex;
     gap: 0.5rem;
@@ -62,6 +71,7 @@
     color: white;
 }
 
+/* ---------- MAPA DE ASSENTOS ---------- */
 .mapa-assentos-container {
     margin: 1rem 0;
 }
@@ -74,6 +84,7 @@
     max-width: 100%;
 }
 
+/* ---------- ESTILOS DOS ASSENTOS ---------- */
 .assento {
     aspect-ratio: 1;
     display: flex;
@@ -118,6 +129,7 @@
     opacity: 0.8;
 }
 
+/* ---------- LEGENDA ---------- */
 .legenda {
     display: flex;
     gap: 2rem;
@@ -139,6 +151,7 @@
     cursor: default;
 }
 
+/* ---------- BOTÕES DE AÇÃO ---------- */
 .assentos-acoes {
     display: flex;
     gap: 1rem;
@@ -176,7 +189,7 @@
     background: #cbd5e1;
 }
 
-/* Responsivo */
+/* ---------- RESPONSIVIDADE ---------- */
 @media (max-width: 700px) {
     .assentos-main {
         padding: 1rem;
@@ -199,16 +212,8 @@
     }
 }
 
-/* Ajuste para garantir que o grid não quebre em telas pequenas */
 @media (max-width: 480px) {
     .mapa-assentos {
         grid-template-columns: repeat(3, 1fr);
     }
-}
-
-.assento.selecionado-outro {
-    background: #fbbf24;
-    color: #1e293b;
-    cursor: not-allowed;
-    opacity: 0.8;
 }

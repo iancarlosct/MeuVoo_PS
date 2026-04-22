@@ -1,3 +1,12 @@
+/*
+ * dados-passageiros.css
+ *
+ * Estilos para a página de preenchimento dos dados dos passageiros.
+ * Define a aparência dos blocos de voo, cards de passageiros, formulários
+ * e botões de ação.
+ */
+
+/* ---------- CONTAINER PRINCIPAL ---------- */
 .dados-main {
     flex: 1;
     padding: 2rem;
@@ -15,6 +24,7 @@
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
 }
 
+/* ---------- CABEÇALHO ---------- */
 .dados-titulo {
     font-size: 2rem;
     font-weight: 650;
@@ -22,6 +32,7 @@
     margin-bottom: 0.5rem;
 }
 
+/* ---------- BLOCOS DE VOO ---------- */
 .voo-bloco {
     margin-bottom: 2.5rem;
     border-bottom: 2px dashed #cbd5e1;
@@ -38,6 +49,7 @@
     color: #0b1e3a;
 }
 
+/* ---------- GRID DE PASSAGEIROS ---------- */
 .passageiros-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -60,6 +72,7 @@
     padding-bottom: 0.5rem;
 }
 
+/* ---------- FORMULÁRIOS ---------- */
 .form-grid {
     display: flex;
     flex-direction: column;
@@ -96,6 +109,7 @@
     font-size: 0.8rem;
 }
 
+/* ---------- BOTÕES DE AÇÃO ---------- */
 .dados-acoes {
     display: flex;
     gap: 1rem;
@@ -133,10 +147,21 @@
     background: #cbd5e1;
 }
 
+/* ---------- RESPONSIVIDADE ---------- */
 @media (max-width: 700px) {
-    .dados-main { padding: 1rem; }
-    .dados-container { padding: 1.5rem; }
-    .passageiros-grid { grid-template-columns: 1fr; }
-    .dados-acoes { flex-direction: column-reverse; }
-    .btn-confirmar, .btn-cancelar { width: 100%; }
+    .dados-main {
+        padding: 1rem;
+    }
+    .dados-container {
+        padding: 1.5rem;
+    }
+    .passageiros-grid {
+        grid-template-columns: 1fr;
+    }
+    .dados-acoes {
+        flex-direction: column-reverse;
+    }
+    .btn-confirmar, .btn-cancelar {
+        width: 100%;
+    }
 }

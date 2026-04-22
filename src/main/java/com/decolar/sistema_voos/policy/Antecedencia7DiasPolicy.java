@@ -1,3 +1,10 @@
+/*
+ * Antecedencia7DiasPolicy.java
+ *
+ * Política de cancelamento para voos com antecedência igual ou superior a 7 dias.
+ * O passageiro tem direito a 90% de reembolso do valor total.
+ */
+
 package com.decolar.sistema_voos.policy;
 
 import java.math.BigDecimal;

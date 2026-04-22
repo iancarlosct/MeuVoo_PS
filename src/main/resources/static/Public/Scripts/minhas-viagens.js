@@ -1,26 +1,37 @@
+/*
+ * minhas-viagens.js
+ *
+ * Lógica da página "Minhas Viagens". Carrega o histórico de reservas do usuário
+ * logado a partir do localStorage, exibe os cards com detalhes de cada viagem e
+ * oferece ações como ver detalhes, fazer check‑in, simular reembolso e cancelar.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
+    // ---------- VERIFICAÇÃO DE AUTENTICAÇÃO ----------
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioMeuVoo'));
-    if (!usuarioLogado) {
+    if (!usuarioLogado || !usuarioLogado.id) {
         alert('Faça login para acessar suas viagens.');
         window.location.href = 'login.html';
         return;
     }
 
-    // 🔧 Usar chave específica do usuário
+    // ---------- CARREGAMENTO DO HISTÓRICO DO USUÁRIO ----------
     const chaveHistorico = `historicoReservas_${usuarioLogado.id}`;
+    console.log('Chave do histórico:', chaveHistorico);
     const historico = JSON.parse(localStorage.getItem(chaveHistorico)) || [];
 
     const listaDiv = document.getElementById('listaViagens');
     const vazioDiv = document.getElementById('mensagemVazio');
 
+    // ---------- EXIBIÇÃO DE MENSAGEM DE VAZIO ----------
     if (historico.length === 0) {
         listaDiv.innerHTML = '';
         vazioDiv.style.display = 'block';
         return;
     }
-
     vazioDiv.style.display = 'none';
 
+    // ---------- MAPEAMENTO DE CIDADES ----------
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'VCP': 'Campinas',
         'GIG': 'Rio de Janeiro', 'SDU': 'Rio de Janeiro (Santos Dumont)',
@@ -31,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const obterNomeCidade = sigla => siglaParaCidade[sigla] || sigla;
 
+    // ---------- RENDERIZAÇÃO DOS CARDS DE RESERVA ----------
     let html = '';
 
     historico.sort((a, b) => new Date(b.dataReserva) - new Date(a.dataReserva));
@@ -44,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const numPassageiros = reserva.passengers.length;
 
         let passageirosHtml = '';
-        reserva.passengers.forEach((p, i) => {
+        reserva.passengers.forEach((p) => {
             passageirosHtml += `
                 <div class="passageiro-item">
                     <span>👤 ${p.nome}</span>
@@ -90,6 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     listaDiv.innerHTML = html;
+
+    // ---------- EVENT LISTENERS ----------
 
     document.querySelectorAll('.btn-detalhes').forEach(btn => {
         btn.addEventListener('click', (e) => {

@@ -1,3 +1,12 @@
+/*
+ * solicitacoes.css
+ *
+ * Estilos para a página de solicitações especiais.
+ * Define a aparência dos cards de passageiros, grupos de opções
+ * (acessibilidade e restrições alimentares) e botões de ação.
+ */
+
+/* ---------- CONTAINER PRINCIPAL ---------- */
 .solicitacoes-main {
     flex: 1;
     padding: 2rem;
@@ -16,6 +25,7 @@
     border: 1px solid rgba(255,255,255,0.6);
 }
 
+/* ---------- CABEÇALHO E INFORMAÇÕES DO VOO ---------- */
 .solicitacoes-titulo {
     font-size: 2rem;
     font-weight: 650;
@@ -33,6 +43,7 @@
     color: #1e293b;
 }
 
+/* ---------- LISTA DE PASSAGEIROS ---------- */
 .lista-passageiros {
     display: flex;
     flex-direction: column;
@@ -55,6 +66,7 @@
     padding-bottom: 0.5rem;
 }
 
+/* ---------- GRUPOS DE OPÇÕES ---------- */
 .opcoes-grupo {
     margin-bottom: 1.5rem;
 }
@@ -80,6 +92,7 @@
     height: 16px;
 }
 
+/* ---------- BOTÕES DE AÇÃO ---------- */
 .solicitacoes-acoes {
     display: flex;
     gap: 1rem;
@@ -117,6 +130,7 @@
     background: #cbd5e1;
 }
 
+/* ---------- RESPONSIVIDADE ---------- */
 @media (max-width: 600px) {
     .solicitacoes-main {
         padding: 1rem;

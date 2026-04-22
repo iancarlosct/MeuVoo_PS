@@ -1,7 +1,17 @@
+/*
+ * checkin.js
+ *
+ * Lógica da página de check‑in online. Permite ao usuário buscar sua reserva
+ * por localizador e sobrenome, visualizar os detalhes do voo e passageiros,
+ * confirmar o check‑in e gerar os cartões de embarque para todos os passageiros.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
+    // ---------- CONFIGURAÇÕES INICIAIS ----------
     const urlParams = new URLSearchParams(window.location.search);
     let localizadorUrl = urlParams.get('localizador');
 
+    // ---------- VERIFICAÇÃO DE AUTENTICAÇÃO ----------
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioMeuVoo'));
     if (!usuarioLogado) {
         alert('Faça login para acessar o check‑in.');
@@ -9,15 +19,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // ---------- CARREGAMENTO DO HISTÓRICO DO USUÁRIO ----------
     const chaveHistorico = `historicoReservas_${usuarioLogado.id}`;
     const historico = JSON.parse(localStorage.getItem(chaveHistorico)) || [];
     let reservaAtual = null;
 
+    // ---------- ELEMENTOS DA INTERFACE ----------
     const buscaDiv = document.getElementById('buscaReserva');
     const detalhesDiv = document.getElementById('detalhesReserva');
     const mensagemDiv = document.getElementById('mensagemFeedback');
     const formCheckin = document.getElementById('formCheckin');
 
+    // ---------- MAPEAMENTO DE CIDADES ----------
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'GIG': 'Rio de Janeiro',
         'BSB': 'Brasília', 'SSA': 'Salvador', 'REC': 'Recife', 'FOR': 'Fortaleza',
@@ -26,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'JFK': 'Nova York', 'LIS': 'Lisboa', 'LHR': 'Londres', 'CDG': 'Paris'
     };
 
+    // ---------- FUNÇÕES AUXILIARES ----------
     function exibirMensagem(texto, tipo = 'erro') {
         mensagemDiv.innerHTML = `<div class="mensagem-${tipo}">${texto}</div>`;
     }
@@ -35,7 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${dia}/${mes}/${ano}`;
     }
 
+    // ---------- EXIBIÇÃO DOS DETALHES DA RESERVA ----------
     function mostrarDetalhes(reserva) {
+        // Valida se a reserva não está cancelada
         if (reserva.status === 'Cancelada') {
             exibirMensagem('Esta reserva foi cancelada e não pode mais realizar check‑in.', 'erro');
             buscaDiv.style.display = 'block';
@@ -48,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         detalhesDiv.style.display = 'block';
         mensagemDiv.innerHTML = '';
 
+        // Preenche informações do voo
         document.getElementById('origemVoo').textContent = reserva.from;
         document.getElementById('destinoVoo').textContent = reserva.to;
         document.getElementById('numeroVoo').textContent = `${reserva.airline} ${reserva.flightId}`;
@@ -55,14 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('horarioVoo').textContent = reserva.departure || '08:00 - 10:30';
         document.getElementById('portao').textContent = reserva.portao || 'A definir';
 
+        // Lista de passageiros com assentos
         const listaPassageiros = document.getElementById('listaPassageirosCheckin');
         listaPassageiros.innerHTML = '';
         reserva.passengers.forEach((p, i) => {
             const li = document.createElement('li');
-            li.textContent = `${i+1}. ${p.nome} - Assento: ${p.assento || 'Não selecionado'}`;
+            li.textContent = `${i + 1}. ${p.nome} - Assento: ${p.assento || 'Não selecionado'}`;
             listaPassageiros.appendChild(li);
         });
 
+        // Atualiza interface conforme status do check‑in
         const statusSpan = document.getElementById('statusCheckin');
         const btnConfirmar = document.getElementById('btnConfirmarCheckin');
         const cartaoDiv = document.getElementById('cartaoEmbarque');
@@ -85,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ---------- GERAÇÃO DOS CARTÕES DE EMBARQUE ----------
     function preencherCartoes(reserva) {
         const cartaoContainer = document.getElementById('cartaoEmbarque');
         let cartoesHtml = '<h3>🎫 Cartões de Embarque</h3>';
@@ -112,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartaoContainer.innerHTML = cartoesHtml;
     }
 
+    // ---------- ACESSO DIRETO VIA URL (COM LOCALIZADOR) ----------
     if (localizadorUrl) {
         const reservaEncontrada = historico.find(r => r.localizador === localizadorUrl.toUpperCase());
         if (reservaEncontrada) {
@@ -121,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ---------- BUSCA MANUAL POR FORMULÁRIO ----------
     formCheckin.addEventListener('submit', (e) => {
         e.preventDefault();
         const localizador = document.getElementById('localizador').value.trim().toUpperCase();
@@ -145,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarDetalhes(reserva);
     });
 
+    // ---------- CONFIRMAÇÃO DO CHECK‑IN ----------
     document.getElementById('btnConfirmarCheckin').addEventListener('click', () => {
         if (!reservaAtual) return;
         if (reservaAtual.status === 'Cancelada') {
@@ -152,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Gera portão aleatório e atualiza status
         reservaAtual.portao = `A${Math.floor(Math.random() * 20) + 1}`;
         reservaAtual.status = 'Check‑in realizado';
 
@@ -160,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarDetalhes(reservaAtual);
     });
 
+    // ---------- BUSCAR OUTRA RESERVA ----------
     document.getElementById('btnBuscarOutro').addEventListener('click', () => {
         buscaDiv.style.display = 'block';
         detalhesDiv.style.display = 'none';

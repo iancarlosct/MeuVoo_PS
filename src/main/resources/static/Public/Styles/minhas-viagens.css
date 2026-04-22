@@ -1,3 +1,11 @@
+/*
+ * minhas-viagens.css
+ *
+ * Estilos para a página "Minhas Viagens". Define a aparência dos cards de reserva,
+ * status, detalhes dos passageiros e botões de ação (check‑in, reembolso, cancelar).
+ */
+
+/* ---------- CONTAINER PRINCIPAL ---------- */
 .viagens-main {
     flex: 1;
     padding: 2rem;
@@ -16,6 +24,7 @@
     border: 1px solid rgba(255,255,255,0.6);
 }
 
+/* ---------- CABEÇALHO ---------- */
 .viagens-titulo {
     font-size: 2rem;
     font-weight: 650;
@@ -26,12 +35,14 @@
     padding-bottom: 1rem;
 }
 
+/* ---------- LISTA DE RESERVAS ---------- */
 .lista-viagens {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
+/* ---------- CARDS DE RESERVA ---------- */
 .reserva-card {
     background: white;
     border-radius: 24px;
@@ -64,6 +75,7 @@
     letter-spacing: 0.5px;
 }
 
+/* ---------- STATUS DA RESERVA ---------- */
 .status {
     padding: 0.3rem 1rem;
     border-radius: 40px;
@@ -86,6 +98,7 @@
     color: #1e40af;
 }
 
+/* ---------- DETALHES DO VOO ---------- */
 .reserva-rota {
     font-size: 1.4rem;
     font-weight: 600;
@@ -108,6 +121,7 @@
     gap: 0.4rem;
 }
 
+/* ---------- PASSAGEIROS ---------- */
 .passageiros-resumo {
     margin: 1rem 0;
     padding: 1rem;
@@ -123,6 +137,7 @@
     padding: 0.3rem 0;
 }
 
+/* ---------- BOTÕES DE AÇÃO ---------- */
 .reserva-acoes {
     display: flex;
     gap: 1rem;
@@ -130,7 +145,7 @@
     flex-wrap: wrap;
 }
 
-.btn-detalhes, .btn-checkin, .btn-cancelar-reserva {
+.btn-detalhes, .btn-checkin, .btn-cancelar-reserva, .btn-simular-reembolso {
     padding: 0.5rem 1.2rem;
     border-radius: 40px;
     font-weight: 600;
@@ -168,6 +183,17 @@
     background: #fee2e2;
 }
 
+.btn-simular-reembolso {
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    color: #92400e;
+}
+
+.btn-simular-reembolso:hover {
+    background: #fde68a;
+}
+
+/* ---------- MENSAGEM DE VAZIO ---------- */
 .mensagem-vazio {
     text-align: center;
     padding: 3rem 1rem;
@@ -191,26 +217,23 @@
     background: #0f2b8a;
 }
 
+/* ---------- RESPONSIVIDADE ---------- */
 @media (max-width: 700px) {
-    .viagens-main { padding: 1rem; }
-    .viagens-container { padding: 1.5rem; }
-    .reserva-header { flex-direction: column; align-items: flex-start; }
-    .reserva-acoes { flex-direction: column; }
-    .btn-detalhes, .btn-checkin, .btn-cancelar-reserva { width: 100%; text-align: center; }
-}
-
-.btn-simular-reembolso {
-    background: #fef3c7;
-    border: 1px solid #fbbf24;
-    color: #92400e;
-    padding: 0.5rem 1.2rem;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.15s;
-}
-
-.btn-simular-reembolso:hover {
-    background: #fde68a;
+    .viagens-main {
+        padding: 1rem;
+    }
+    .viagens-container {
+        padding: 1.5rem;
+    }
+    .reserva-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .reserva-acoes {
+        flex-direction: column;
+    }
+    .btn-detalhes, .btn-checkin, .btn-cancelar-reserva, .btn-simular-reembolso {
+        width: 100%;
+        text-align: center;
+    }
 }

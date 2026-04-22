@@ -1,3 +1,9 @@
+<!--
+    index.html
+    Página inicial do MeuVoo. Permite ao usuário buscar passagens aéreas
+    de duas formas: por rota (origem/destino/data) ou por orçamento.
+    Exibe os resultados da busca e possibilita adicionar voos ao carrinho.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,9 +18,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo">MeuVoo</div>
-            <div class="user-area" id="authHeaderArea">
-                <!-- Será preenchido dinamicamente pelo auth-header.js -->
-            </div>
+            <div class="user-area" id="authHeaderArea"></div>
         </div>
     </header>
 
@@ -32,7 +36,6 @@
             <div class="search-card">
                 <div class="search-header">
                     <h1>Passagens aéreas</h1>
-                    <!-- Toggle de modo de busca -->
                     <div class="search-mode-toggle">
                         <button type="button" class="mode-btn active" data-mode="route">✈️ Buscar por rota</button>
                         <button type="button" class="mode-btn" data-mode="price">💰 Recomendar por preço</button>
@@ -40,7 +43,6 @@
                 </div>
 
                 <form id="flightSearchForm" class="flight-form">
-                    <!-- Campos do modo Rota (padrão) -->
                     <div class="form-row mode-fields" id="routeFields">
                         <div class="input-field">
                             <label for="from">Origem</label>
@@ -67,7 +69,6 @@
                             </div>
                         </div>
 
-                        <!-- Seletor de passageiros/classe (usado no modo rota) -->
                         <div class="input-field" id="routePassengerField">
                             <label for="passengersTrigger">Passageiros / Classe</label>
                             <div class="passenger-selector">
@@ -101,9 +102,7 @@
                         </div>
                     </div>
 
-                    <!-- ========== CAMPOS DO MODO PREÇO (ATUALIZADO) ========== -->
                     <div class="form-row mode-fields" id="priceFields" style="display: none;">
-                        <!-- Novo campo: Origem -->
                         <div class="input-field">
                             <label for="priceFrom">Origem</label>
                             <div class="input-icon">
@@ -134,7 +133,6 @@
                                             <button type="button" class="counter-btn" data-action="increment-price">+</button>
                                         </div>
                                     </div>
-                                    <!-- Sem opção de classe no modo preço -->
                                     <button type="button" class="btn-apply" id="applyPricePassengers">Aplicar</button>
                                 </div>
                             </div>
@@ -144,12 +142,13 @@
                     <button type="submit" class="btn-search" id="searchButton">Buscar voos</button>
                 </form>
 
-                <!-- Datalist com sugestões de cidades -->
+                <!-- Datalist com as cidades existentes no backend -->
                 <datalist id="cidadesList">
                     <!-- Nacionais -->
                     <option value="São Paulo">GRU</option>
-                    <option value="Rio de Janeiro">GIG / SDU</option>
+                    <option value="São Paulo (Congonhas)">CGH</option>
                     <option value="Brasília">BSB</option>
+                    <option value="Rio de Janeiro">GIG / SDU</option>
                     <option value="Salvador">SSA</option>
                     <option value="Recife">REC</option>
                     <option value="Fortaleza">FOR</option>
@@ -157,12 +156,6 @@
                     <option value="Curitiba">CWB</option>
                     <option value="Porto Alegre">POA</option>
                     <option value="Manaus">MAO</option>
-                    <option value="Campinas">VCP</option>
-                    <option value="Congonhas">CGH</option>
-                    <option value="Galeão">GIG</option>
-                    <option value="Santos Dumont">SDU</option>
-                    <option value="Confins">CNF</option>
-                    <option value="Pampulha">PLU</option>
                     <!-- Internacionais -->
                     <option value="Santiago">SCL</option>
                     <option value="Buenos Aires">EZE</option>
@@ -171,19 +164,14 @@
                     <option value="Lisboa">LIS</option>
                     <option value="Londres">LHR</option>
                     <option value="Paris">CDG</option>
-                    <option value="Lima">LIM</option>
-                    <option value="Roma">FCO</option>
                 </datalist>
 
-                <!-- Resultados da busca -->
                 <div id="resultadosBusca" class="resultados-busca" style="display: none;">
                     <div class="resultados-header">
                         <h3>Voos encontrados</h3>
                         <span id="quantidadeResultados"></span>
                     </div>
-                    <div id="listaVoos" class="lista-voos">
-                        <!-- Cards de voo serão inseridos via JS -->
-                    </div>
+                    <div id="listaVoos" class="lista-voos"></div>
                 </div>
             </div>
         </div>

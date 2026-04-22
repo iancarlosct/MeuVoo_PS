@@ -1,6 +1,16 @@
+/*
+ * assentos.js
+ *
+ * Lógica da página de seleção de assentos. Carrega o mapa de assentos do voo
+ * a partir da API, permite que o usuário escolha um lugar para cada passageiro
+ * e envia a reserva temporária dos assentos selecionados ao backend.
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
+    // ---------- CONFIGURAÇÕES INICIAIS ----------
     const API_BASE = 'http://localhost:8080/api';
 
+    // ---------- OBTENÇÃO DO ITEM DO CARRINHO ----------
     const urlParams = new URLSearchParams(window.location.search);
     const itemIndex = urlParams.get('item');
     if (itemIndex === null) {
@@ -19,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('Item do carrinho:', item);
 
+    // ---------- MAPEAMENTO DE CIDADES ----------
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'VCP': 'Campinas',
         'GIG': 'Rio de Janeiro', 'SDU': 'Rio de Janeiro (Santos Dumont)',
@@ -29,11 +40,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     const obterNomeCidade = (sigla) => siglaParaCidade[sigla] || sigla;
 
+    // ---------- EXIBIÇÃO DO RESUMO DO VOO ----------
     document.getElementById('vooInfo').innerHTML = `
         <strong>${obterNomeCidade(item.from)} → ${obterNomeCidade(item.to)}</strong><br>
         ${item.date} • ${item.airline} • ${item.flightClass === 'ECONOMICA' ? 'Econômica' : 'Executiva'}
     `;
 
+    // ---------- CRIAÇÃO DAS TABS DE PASSAGEIROS ----------
     const passageiros = item.passengers;
     let passageiroAtivo = 0;
 
@@ -42,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const btn = document.createElement('button');
         btn.classList.add('tab-passageiro');
         if (i === 0) btn.classList.add('ativo');
-        btn.textContent = `Passageiro ${i+1}`;
+        btn.textContent = `Passageiro ${i + 1}`;
         btn.dataset.index = i;
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-passageiro').forEach(b => b.classList.remove('ativo'));
@@ -53,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabsDiv.appendChild(btn);
     });
 
+    // ---------- CARREGAMENTO DOS ASSENTOS VIA API ----------
     let seats = [];
     try {
         const response = await fetch(`${API_BASE}/seats/${item.flightId}`);
@@ -65,11 +79,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // ---------- ESTADO DOS ASSENTOS SELECIONADOS ----------
     const assentosSelecionados = passageiros.map(p => p.seat || null);
     console.log('Assentos pré-selecionados:', assentosSelecionados);
 
     const mapaDiv = document.getElementById('mapaAssentos');
 
+    // ---------- RENDERIZAÇÃO DO MAPA DE ASSENTOS ----------
     function renderizarMapa() {
         mapaDiv.innerHTML = '';
         if (seats.length === 0) {
@@ -77,6 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        // Agrupa assentos por fileira para organização visual
         const assentosPorFileira = {};
         seats.forEach(seat => {
             const numero = seat.seatNumber.match(/\d+/)[0];
@@ -84,34 +101,36 @@ document.addEventListener('DOMContentLoaded', async () => {
             assentosPorFileira[numero].push(seat);
         });
 
-        const fileiras = Object.keys(assentosPorFileira).sort((a,b) => parseInt(a) - parseInt(b));
+        const fileiras = Object.keys(assentosPorFileira).sort((a, b) => parseInt(a) - parseInt(b));
 
         fileiras.forEach(fileira => {
-            const assentosFileira = assentosPorFileira[fileira].sort((a,b) => a.seatNumber.localeCompare(b.seatNumber));
+            const assentosFileira = assentosPorFileira[fileira].sort((a, b) => a.seatNumber.localeCompare(b.seatNumber));
             assentosFileira.forEach(seat => {
                 const seatDiv = document.createElement('div');
                 seatDiv.classList.add('assento');
                 seatDiv.textContent = seat.seatNumber;
 
+                // Define a classe CSS conforme o estado do assento
                 if (!seat.available) {
                     seatDiv.classList.add('ocupado');
                 } else {
                     seatDiv.classList.add('disponivel');
                 }
 
-                // Destacar assento selecionado pelo passageiro ativo
+                // Destaca o assento selecionado pelo passageiro ativo
                 if (assentosSelecionados[passageiroAtivo] === seat.seatNumber) {
                     seatDiv.classList.add('selecionado');
                     seatDiv.classList.remove('disponivel');
                 }
 
-                // Destacar se outro passageiro já selecionou este assento
+                // Destaca se o assento foi escolhido por outro passageiro
                 const outroIdx = assentosSelecionados.findIndex(s => s === seat.seatNumber);
                 if (outroIdx !== -1 && outroIdx !== passageiroAtivo) {
                     seatDiv.classList.add('selecionado-outro');
                     seatDiv.classList.remove('disponivel');
                 }
 
+                // Lógica de seleção de assento
                 seatDiv.addEventListener('click', () => {
                     if (!seat.available) {
                         alert('Este assento já está ocupado.');
@@ -120,17 +139,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     const outroPassageiro = assentosSelecionados.findIndex(s => s === seat.seatNumber);
                     if (outroPassageiro !== -1 && outroPassageiro !== passageiroAtivo) {
-                        alert(`Este assento já foi selecionado pelo Passageiro ${outroPassageiro+1}.`);
+                        alert(`Este assento já foi selecionado pelo Passageiro ${outroPassageiro + 1}.`);
                         return;
                     }
 
-                    // Liberar assento anterior do passageiro ativo
                     const anterior = assentosSelecionados[passageiroAtivo];
                     if (anterior) {
                         assentosSelecionados[passageiroAtivo] = null;
                     }
 
-                    // Selecionar novo assento
                     assentosSelecionados[passageiroAtivo] = seat.seatNumber;
                     renderizarMapa();
                 });
@@ -142,6 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     renderizarMapa();
 
+    // ---------- CONFIRMAÇÃO DOS ASSENTOS ----------
     document.getElementById('btnConfirmar').addEventListener('click', async () => {
         const faltando = assentosSelecionados.some(s => !s);
         if (faltando) {
@@ -171,6 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // ---------- CANCELAMENTO ----------
     document.getElementById('btnCancelar').addEventListener('click', () => {
         window.location.href = 'carrinho.html';
     });

@@ -1,4 +1,14 @@
+/*
+ * reembolso.js
+ *
+ * Lógica da página de simulação de reembolso. Recebe o localizador da reserva,
+ * consulta o backend para calcular o valor estimado de reembolso com base nas
+ * políticas de cancelamento (polimorfismo no backend) e permite confirmar o
+ * cancelamento da reserva.
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
+    // ---------- OBTENÇÃO DO LOCALIZADOR DA URL ----------
     const urlParams = new URLSearchParams(window.location.search);
     const localizador = urlParams.get('localizador');
     if (!localizador) {
@@ -7,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // ---------- VERIFICAÇÃO DE AUTENTICAÇÃO ----------
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioMeuVoo'));
     if (!usuarioLogado) {
         alert('Faça login para acessar o simulador.');
@@ -14,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // ---------- CARREGAMENTO DO HISTÓRICO E BUSCA DA RESERVA ----------
     const chaveHistorico = `historicoReservas_${usuarioLogado.id}`;
     const historico = JSON.parse(localStorage.getItem(chaveHistorico)) || [];
     const reserva = historico.find(r => r.localizador === localizador);
@@ -29,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // ---------- MAPEAMENTO DE CIDADES ----------
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'GIG': 'Rio de Janeiro',
         'BSB': 'Brasília', 'SSA': 'Salvador', 'REC': 'Recife', 'FOR': 'Fortaleza',
@@ -38,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     const obterNomeCidade = sigla => siglaParaCidade[sigla] || sigla;
 
+    // ---------- EXIBIÇÃO DOS DETALHES DA RESERVA ----------
     const detalhesDiv = document.getElementById('detalhesReserva');
     detalhesDiv.innerHTML = `
         <h3>Reserva ${reserva.localizador}</h3>
@@ -46,6 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Valor total pago: ${reserva.totalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
     `;
 
+    // ---------- CONSULTA À API DE REEMBOLSO (POLIMORFISMO NO BACKEND) ----------
     try {
         const response = await fetch(`http://localhost:8080/api/reembolso/calcular?dataVoo=${reserva.date}&valorTotal=${reserva.totalPrice}`);
         if (!response.ok) throw new Error('Erro ao calcular reembolso');
@@ -59,10 +74,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert('Erro ao calcular reembolso. Tente novamente.');
     }
 
+    // ---------- CANCELAR OPERAÇÃO ----------
     document.getElementById('btnCancelarReembolso').addEventListener('click', () => {
         window.location.href = 'minhas-viagens.html';
     });
 
+    // ---------- CONFIRMAR CANCELAMENTO E REEMBOLSO ----------
     document.getElementById('btnConfirmarReembolso').addEventListener('click', () => {
         if (confirm(`Confirmar cancelamento e reembolso?`)) {
             reserva.status = 'Cancelada';

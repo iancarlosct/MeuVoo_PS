@@ -1,3 +1,11 @@
+/*
+ * FlightService.java
+ *
+ * Serviço responsável pela lógica de negócio relacionada a voos.
+ * Oferece métodos para busca por rota (com fallback para datas próximas),
+ * recomendação por orçamento e população inicial do banco de dados.
+ */
+
 package com.decolar.sistema_voos.service;
 
 import com.decolar.sistema_voos.entity.Flight;
@@ -20,35 +28,34 @@ public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
 
-    // Busca tradicional por rota (com fallback para datas próximas)
+    /**
+     * Busca voos por rota, data, número de passageiros e classe.
+     * Caso não haja resultados na data exata, amplia a busca para ±7 dias.
+     */
     public List<Flight> searchFlights(String from, String to, LocalDate date,
                                       int passengers, FlightClass flightClass) {
-        // Primeiro tenta data exata
         List<Flight> exactFlights = flightRepository.findAvailableFlights(from, to, date, flightClass, passengers);
         if (!exactFlights.isEmpty()) {
             return exactFlights;
         }
 
-        // Se não encontrou, busca em ±7 dias
         LocalDate startDate = date.minusDays(7);
         LocalDate endDate = date.plusDays(7);
         List<Flight> nearbyFlights = flightRepository.findFlightsInDateRange(from, to, startDate, endDate, flightClass, passengers);
-
-        // Ordena por proximidade da data original
         nearbyFlights.sort(Comparator.comparingLong(f -> Math.abs(ChronoUnit.DAYS.between(date, f.getDate()))));
-
         return nearbyFlights;
     }
 
-    // Recomendação por preço máximo (agora com origem e limitada a 3 destinos distintos)
+    /**
+     * Recomenda até 3 destinos diferentes a partir de uma origem, respeitando
+     * o orçamento máximo informado e a quantidade de passageiros.
+     */
     public List<Flight> recommendByBudget(String from, BigDecimal maxPrice, int passengers) {
-        // 1. Busca todos os voos que atendem aos critérios básicos
         List<Flight> allFlights = flightRepository.findByFromAndPriceLessThanEqual(from, maxPrice, passengers);
         if (allFlights.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // 2. Agrupa por destino e seleciona o voo de maior preço (mais próximo do orçamento) para cada destino
         Map<String, Flight> bestByDestination = allFlights.stream()
                 .collect(Collectors.toMap(
                         Flight::getTo,
@@ -57,25 +64,21 @@ public class FlightService {
                                 existing.getPrice().compareTo(replacement.getPrice()) >= 0 ? existing : replacement
                 ));
 
-        // 3. Ordena os voos selecionados pelo preço decrescente (mais próximo do maxPrice primeiro)
         List<Flight> recommendations = new ArrayList<>(bestByDestination.values());
         recommendations.sort((f1, f2) -> f2.getPrice().compareTo(f1.getPrice()));
-
-        // 4. Retorna no máximo 3 recomendações
         return recommendations.stream().limit(3).collect(Collectors.toList());
     }
 
-    // Método para popular dados de exemplo (1000 voos realistas)
+    /**
+     * Popula o banco de dados com voos e assentos de exemplo.
+     * Os preços são calculados com base na distância aproximada entre as cidades.
+     */
     public void populateSampleData() {
-        // Descomente para forçar recriação sempre que iniciar
-        // flightRepository.deleteAll();
-
         if (flightRepository.count() > 0) {
             System.out.println(">>> Banco já contém dados. Pulando população.");
             return;
         }
 
-        // === Definição de distâncias para cálculo de preço ===
         Map<String, Integer> distancias = new HashMap<>();
         distancias.put("GRU-GIG", 360);   distancias.put("GRU-REC", 2100);
         distancias.put("GRU-SSA", 1450);  distancias.put("GRU-POA", 850);
@@ -150,8 +153,7 @@ public class FlightService {
             voo.setFlightClass(classe);
             voo.setAvailableSeats(assentos);
 
-            // ========== Criar assentos para este voo ==========
-            int totalAssentos = assentos; // quantidade gerada aleatoriamente
+            int totalAssentos = assentos;
             for (int j = 0; j < totalAssentos; j++) {
                 int fileira = (j / 6) + 1;
                 char letra = (char) ('A' + (j % 6));
@@ -161,7 +163,7 @@ public class FlightService {
                 seat.setSeatNumber(seatNumber);
                 seat.setAvailable(true);
                 seat.setFlight(voo);
-                voo.getSeats().add(seat); // <-- Adiciona à lista do voo (cascade)
+                voo.getSeats().add(seat);
             }
 
             flights.add(voo);

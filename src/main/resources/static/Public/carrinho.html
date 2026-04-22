@@ -1,3 +1,9 @@
+<!--
+    carrinho.html
+    Página de carrinho de compras. Exibe os voos selecionados, permite
+    personalizar assentos, bagagens e solicitações especiais, e mostra o
+    resumo financeiro antes da finalização da compra.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,9 +19,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo">MeuVoo</div>
-            <div class="user-area" id="authHeaderArea">
-                <!-- Será preenchido dinamicamente pelo auth-header.js -->
-            </div>
+            <div class="user-area" id="authHeaderArea"></div>
         </div>
     </header>
 
@@ -32,18 +36,13 @@
         <div class="carrinho-container">
             <h1 class="carrinho-titulo">Seu carrinho</h1>
 
-            <!-- Área de itens do carrinho -->
-            <div id="itensCarrinho" class="itens-carrinho">
-                <!-- Itens serão inseridos via JavaScript -->
-            </div>
+            <div id="itensCarrinho" class="itens-carrinho"></div>
 
-            <!-- Mensagem de carrinho vazio -->
             <div id="carrinhoVazio" class="carrinho-vazio" style="display: none;">
                 <p>🛒 Seu carrinho está vazio.</p>
                 <a href="../index.html" class="btn-continuar">Buscar passagens</a>
             </div>
 
-            <!-- Resumo do pedido -->
             <div id="resumoCarrinho" class="resumo-carrinho" style="display: none;">
                 <div class="resumo-header">
                     <h2>Resumo da compra</h2>

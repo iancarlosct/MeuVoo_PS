@@ -1,3 +1,8 @@
+<!--
+    bagagens.html
+    Página de seleção de bagagens para os passageiros de um voo no carrinho.
+    Permite adicionar franquias de 15kg e 23kg, recalculando o preço total.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,9 +18,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo">MeuVoo</div>
-            <div class="user-area" id="authHeaderArea">
-                <!-- Será preenchido dinamicamente pelo auth-header.js -->
-            </div>
+            <div class="user-area" id="authHeaderArea"></div>
         </div>
     </header>
 
@@ -32,9 +35,7 @@
         <div class="bagagens-container">
             <h1 class="bagagens-titulo">Adicionar bagagens</h1>
             <div id="vooInfo" class="voo-info-resumo"></div>
-
             <div id="passageirosBagagens" class="passageiros-bagagens"></div>
-
             <div class="bagagens-acoes">
                 <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
                 <button class="btn-salvar" id="btnSalvar">Salvar bagagens</button>

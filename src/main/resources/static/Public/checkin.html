@@ -1,3 +1,9 @@
+<!--
+    checkin.html
+    Página de check‑in online. Permite ao usuário buscar sua reserva pelo
+    localizador e sobrenome, confirmar a presença no voo e gerar o cartão
+    de embarque para todos os passageiros.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -31,7 +37,6 @@
             <h1 class="checkin-titulo">Check‑in Online</h1>
             <p class="checkin-subtitulo">Confirme sua presença e obtenha seu cartão de embarque.</p>
 
-            <!-- Área de busca por localizador (caso não venha pela URL) -->
             <div id="buscaReserva" class="busca-reserva">
                 <form id="formCheckin" class="form-checkin">
                     <div class="input-group">
@@ -46,7 +51,6 @@
                 </form>
             </div>
 
-            <!-- Detalhes da reserva e cartão de embarque -->
             <div id="detalhesReserva" class="detalhes-reserva" style="display: none;">
                 <div class="reserva-card">
                     <div class="reserva-header">
@@ -72,7 +76,6 @@
                         <ul id="listaPassageirosCheckin" class="lista-simples"></ul>
                     </div>
 
-                    <!-- Cartão de embarque (inicialmente oculto) -->
                     <div id="cartaoEmbarque" class="cartao-embarque" style="display: none;">
                         <h3>🎫 Cartão de Embarque</h3>
                         <div class="cartao-conteudo">

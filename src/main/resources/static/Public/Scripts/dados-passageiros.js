@@ -1,13 +1,23 @@
+/*
+ * dados-passageiros.js
+ *
+ * Lógica da página de preenchimento dos dados dos passageiros após a finalização
+ * da compra. Renderiza os formulários para cada passageiro de cada voo no carrinho,
+ * valida os campos obrigatórios, e salva a reserva no histórico do usuário logado.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Página de dados dos passageiros carregada.');
 
+    // ---------- VERIFICAÇÃO DE AUTENTICAÇÃO ----------
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioMeuVoo'));
-    if (!usuarioLogado) {
+    if (!usuarioLogado || !usuarioLogado.id) {
         alert('Você precisa estar logado para finalizar a compra.');
         window.location.href = 'login.html';
         return;
     }
 
+    // ---------- CARREGAMENTO DO CARRINHO ----------
     const carrinho = JSON.parse(localStorage.getItem('carrinhoMeuVoo')) || [];
     console.log('Carrinho carregado:', carrinho);
 
@@ -23,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // ---------- MAPEAMENTO DE CIDADES ----------
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'VCP': 'Campinas',
         'GIG': 'Rio de Janeiro', 'SDU': 'Rio de Janeiro (Santos Dumont)',
@@ -33,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const obterNomeCidade = sigla => siglaParaCidade[sigla] || sigla;
 
+    // ---------- RENDERIZAÇÃO DOS FORMULÁRIOS ----------
     let html = '';
 
     carrinho.forEach((item, idxVoo) => {
@@ -84,12 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.innerHTML = html;
 
+    // ---------- CANCELAMENTO ----------
     document.getElementById('btnCancelar').addEventListener('click', () => {
         if (confirm('Deseja cancelar? Os dados preenchidos serão perdidos.')) {
             window.location.href = 'carrinho.html';
         }
     });
 
+    // ---------- CONFIRMAÇÃO DA RESERVA ----------
     document.getElementById('btnConfirmar').addEventListener('click', async () => {
         let todosPreenchidos = true;
         const reservas = [];
@@ -141,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Salvar no histórico do usuário específico
         const chaveHistorico = `historicoReservas_${usuarioLogado.id}`;
+        console.log('Salvando reserva na chave:', chaveHistorico);
         const historico = JSON.parse(localStorage.getItem(chaveHistorico)) || [];
         reservas.forEach(r => {
             historico.push({

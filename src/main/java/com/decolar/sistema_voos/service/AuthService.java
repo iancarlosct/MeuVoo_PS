@@ -1,3 +1,11 @@
+/*
+ * AuthService.java
+ *
+ * Serviço responsável pela lógica de autenticação e cadastro de usuários.
+ * Realiza validações de unicidade de e‑mail e CPF, aplica hash SHA‑256 nas senhas
+ * e retorna os dados públicos do usuário em caso de sucesso.
+ */
+
 package com.decolar.sistema_voos.service;
 
 import com.decolar.sistema_voos.dto.LoginRequest;

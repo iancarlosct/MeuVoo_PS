@@ -1,3 +1,12 @@
+/*
+ * reembolso.css
+ *
+ * Estilos para a página de simulação de reembolso.
+ * Define a aparência do container, detalhes da reserva, resultado do cálculo
+ * e botões de confirmação/cancelamento.
+ */
+
+/* ---------- CONTAINER PRINCIPAL ---------- */
 .reembolso-main {
     flex: 1;
     padding: 2rem;
@@ -16,6 +25,7 @@
     border: 1px solid rgba(255,255,255,0.6);
 }
 
+/* ---------- CABEÇALHO ---------- */
 .reembolso-titulo {
     font-size: 2rem;
     font-weight: 650;
@@ -23,6 +33,7 @@
     margin-bottom: 2rem;
 }
 
+/* ---------- DETALHES DA RESERVA ---------- */
 .detalhes-reserva {
     background: #f8fafc;
     border-radius: 20px;
@@ -31,6 +42,7 @@
     border: 1px solid #e2e8f0;
 }
 
+/* ---------- SIMULAÇÃO DE REEMBOLSO ---------- */
 .simulacao-reembolso {
     background: #f1f5f9;
     border-radius: 20px;
@@ -57,6 +69,7 @@
     margin-bottom: 1.5rem;
 }
 
+/* ---------- BOTÕES DE AÇÃO ---------- */
 .reembolso-acoes {
     display: flex;
     gap: 1rem;
@@ -94,6 +107,7 @@
     background: #cbd5e1;
 }
 
+/* ---------- MENSAGENS DE FEEDBACK ---------- */
 .mensagem-feedback {
     margin-top: 1.5rem;
     text-align: center;
@@ -113,8 +127,15 @@
     border-radius: 20px;
 }
 
+/* ---------- RESPONSIVIDADE ---------- */
 @media (max-width: 600px) {
-    .reembolso-main { padding: 1rem; }
-    .reembolso-container { padding: 1.5rem; }
-    .reembolso-acoes { flex-direction: column; }
+    .reembolso-main {
+        padding: 1rem;
+    }
+    .reembolso-container {
+        padding: 1.5rem;
+    }
+    .reembolso-acoes {
+        flex-direction: column;
+    }
 }

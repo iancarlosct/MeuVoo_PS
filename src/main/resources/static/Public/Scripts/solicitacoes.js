@@ -1,4 +1,13 @@
+/*
+ * solicitacoes.js
+ *
+ * Lógica da página de solicitações especiais. Permite que o usuário selecione
+ * necessidades de acessibilidade e restrições alimentares para cada passageiro
+ * do voo escolhido, salvando as opções diretamente no objeto do carrinho.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
+    // ---------- OBTENÇÃO DO ITEM DO CARRINHO ----------
     const urlParams = new URLSearchParams(window.location.search);
     const itemIndex = urlParams.get('item');
     if (itemIndex === null) {
@@ -15,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Exibir informações do voo
+    // ---------- MAPEAMENTO DE CIDADES ----------
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'VCP': 'Campinas',
         'GIG': 'Rio de Janeiro', 'SDU': 'Rio de Janeiro (Santos Dumont)',
@@ -26,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const obterNomeCidade = (sigla) => siglaParaCidade[sigla] || sigla;
 
+    // ---------- EXIBIÇÃO DO RESUMO DO VOO ----------
     document.getElementById('vooInfo').innerHTML = `
         <strong>${obterNomeCidade(item.from)} → ${obterNomeCidade(item.to)}</strong><br>
         ${item.date} • ${item.airline} • ${item.flightClass === 'ECONOMICA' ? 'Econômica' : 'Executiva'}
@@ -34,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('listaPassageiros');
     const passageiros = item.passengers;
 
-    // Construir formulário para cada passageiro
+    // ---------- RENDERIZAÇÃO DOS FORMULÁRIOS POR PASSAGEIRO ----------
     passageiros.forEach((passageiro, idx) => {
         const div = document.createElement('div');
         div.className = 'passageiro-card';
@@ -74,18 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(div);
     });
 
-    // Salvar alterações
+    // ---------- SALVAMENTO DAS SOLICITAÇÕES ----------
     document.getElementById('formSolicitacoes').addEventListener('submit', (e) => {
         e.preventDefault();
 
         passageiros.forEach((passageiro, idx) => {
             const requests = [];
 
-            // Acessibilidade
             const acessibilidade = document.querySelectorAll(`input[name="acessibilidade_${idx}"]:checked`);
             acessibilidade.forEach(cb => requests.push(cb.value));
 
-            // Alimentares
             const alimentares = document.querySelectorAll(`input[name="alimentar_${idx}"]:checked`);
             alimentares.forEach(cb => requests.push(cb.value));
 
@@ -97,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'carrinho.html';
     });
 
+    // ---------- CANCELAMENTO ----------
     document.getElementById('btnCancelar').addEventListener('click', () => {
         window.location.href = 'carrinho.html';
     });

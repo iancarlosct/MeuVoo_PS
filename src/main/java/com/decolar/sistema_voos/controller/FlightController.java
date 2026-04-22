@@ -1,3 +1,11 @@
+/*
+ * FlightController.java
+ *
+ * Controller responsável pelos endpoints de busca de voos.
+ * Oferece duas modalidades de pesquisa: por rota (origem/destino/data)
+ * e por orçamento (recomendação baseada no valor máximo informado).
+ */
+
 package com.decolar.sistema_voos.controller;
 
 import com.decolar.sistema_voos.entity.Flight;
@@ -14,13 +22,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/flights")
-@CrossOrigin(origins = "*") // Permite acesso do frontend (ajuste conforme necessário)
+@CrossOrigin(origins = "*")
 public class FlightController {
 
     @Autowired
     private FlightService flightService;
 
-    // Endpoint para busca por rota
+    /**
+     * Busca voos por rota, data, número de passageiros e classe.
+     * Caso não haja voos na data exata, retorna opções em datas próximas (±7 dias).
+     */
     @GetMapping("/search")
     public ResponseEntity<List<Flight>> searchFlights(
             @RequestParam String from,
@@ -33,7 +44,10 @@ public class FlightController {
         return ResponseEntity.ok(flights);
     }
 
-    // Endpoint para recomendação por preço (AGORA COM ORIGEM)
+    /**
+     * Recomenda destinos a partir de uma origem, respeitando um orçamento máximo
+     * e a quantidade de passageiros informada.
+     */
     @GetMapping("/recommend")
     public ResponseEntity<List<Flight>> recommendByBudget(
             @RequestParam String from,
@@ -44,7 +58,9 @@ public class FlightController {
         return ResponseEntity.ok(flights);
     }
 
-    // (Opcional) Endpoint para popular dados – pode chamar ao iniciar a aplicação
+    /**
+     * Endpoint auxiliar para forçar a população de dados de exemplo.
+     */
     @PostMapping("/populate")
     public ResponseEntity<String> populate() {
         flightService.populateSampleData();

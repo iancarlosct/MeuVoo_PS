@@ -1,3 +1,12 @@
+/*
+ * checkin.css
+ *
+ * Estilos para a página de check‑in online.
+ * Define a aparência do formulário de busca, detalhes da reserva,
+ * lista de passageiros e cartões de embarque.
+ */
+
+/* ---------- CONTAINER PRINCIPAL ---------- */
 .checkin-main {
     flex: 1;
     padding: 2rem;
@@ -16,6 +25,7 @@
     border: 1px solid rgba(255,255,255,0.6);
 }
 
+/* ---------- CABEÇALHO ---------- */
 .checkin-titulo {
     font-size: 2rem;
     font-weight: 650;
@@ -28,6 +38,7 @@
     margin-bottom: 2rem;
 }
 
+/* ---------- FORMULÁRIO DE BUSCA ---------- */
 .form-checkin {
     display: flex;
     flex-direction: column;
@@ -49,6 +60,7 @@
     font-size: 1rem;
 }
 
+/* ---------- BOTÕES GERAIS ---------- */
 .btn-buscar, .btn-confirmar, .btn-outro {
     padding: 1rem;
     border-radius: 40px;
@@ -65,9 +77,14 @@
     box-shadow: 0 8px 20px rgba(30,75,210,0.25);
 }
 
-.btn-buscar:hover { background: #0f2b8a; }
+.btn-buscar:hover {
+    background: #0f2b8a;
+}
 
-.detalhes-reserva { margin-top: 2rem; }
+/* ---------- DETALHES DA RESERVA ---------- */
+.detalhes-reserva {
+    margin-top: 2rem;
+}
 
 .reserva-card {
     background: #f8fafc;
@@ -93,6 +110,7 @@
     font-size: 0.9rem;
 }
 
+/* ---------- INFORMAÇÕES DO VOO ---------- */
 .rota-grande {
     font-size: 2rem;
     font-weight: 600;
@@ -100,7 +118,10 @@
     margin-bottom: 1rem;
 }
 
-.icone-voo { margin: 0 1rem; color: #1e4bd2; }
+.icone-voo {
+    margin: 0 1rem;
+    color: #1e4bd2;
+}
 
 .info-voo {
     display: flex;
@@ -115,6 +136,7 @@
     margin-right: 0.5rem;
 }
 
+/* ---------- LISTA DE PASSAGEIROS ---------- */
 .lista-simples {
     list-style: none;
     padding: 0;
@@ -126,6 +148,7 @@
     border-bottom: 1px solid #e2e8f0;
 }
 
+/* ---------- CARTÃO DE EMBARQUE ---------- */
 .cartao-embarque {
     background: white;
     border-radius: 20px;
@@ -135,7 +158,9 @@
     border: 1px solid #cbd5e1;
 }
 
-.cartao-conteudo { font-family: 'Courier New', monospace; }
+.cartao-conteudo {
+    font-family: 'Courier New', monospace;
+}
 
 .cartao-header {
     display: flex;
@@ -145,8 +170,16 @@
     margin-bottom: 1rem;
 }
 
-.cartao-passageiro { font-size: 1.2rem; margin-bottom: 0.5rem; }
-.cartao-rota { font-size: 1.4rem; font-weight: bold; margin-bottom: 1rem; }
+.cartao-passageiro {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.cartao-rota {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
 
 .cartao-info {
     display: grid;
@@ -162,6 +195,7 @@
     border-radius: 8px;
 }
 
+/* ---------- AÇÕES DE CHECK‑IN ---------- */
 .checkin-acoes {
     display: flex;
     gap: 1rem;
@@ -174,7 +208,9 @@
     flex: 2;
 }
 
-.btn-confirmar:hover { background: #059669; }
+.btn-confirmar:hover {
+    background: #059669;
+}
 
 .btn-outro {
     background: #e2e8f0;
@@ -182,16 +218,42 @@
     flex: 1;
 }
 
-.btn-outro:hover { background: #cbd5e1; }
+.btn-outro:hover {
+    background: #cbd5e1;
+}
 
-.mensagem-feedback { margin-top: 1.5rem; text-align: center; }
+/* ---------- MENSAGENS DE FEEDBACK ---------- */
+.mensagem-feedback {
+    margin-top: 1.5rem;
+    text-align: center;
+}
 
-.mensagem-erro { background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 20px; }
-.mensagem-sucesso { background: #dcfce7; color: #166534; padding: 1rem; border-radius: 20px; }
+.mensagem-erro {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 20px;
+}
 
+.mensagem-sucesso {
+    background: #dcfce7;
+    color: #166534;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+/* ---------- RESPONSIVIDADE ---------- */
 @media (max-width: 600px) {
-    .checkin-main { padding: 1rem; }
-    .checkin-container { padding: 1.5rem; }
-    .rota-grande { font-size: 1.5rem; }
-    .checkin-acoes { flex-direction: column; }
+    .checkin-main {
+        padding: 1rem;
+    }
+    .checkin-container {
+        padding: 1.5rem;
+    }
+    .rota-grande {
+        font-size: 1.5rem;
+    }
+    .checkin-acoes {
+        flex-direction: column;
+    }
 }

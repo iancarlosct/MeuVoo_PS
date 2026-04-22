@@ -1,3 +1,10 @@
+/*
+ * VooJaOcorridoPolicy.java
+ *
+ * Política de cancelamento aplicada quando a data do voo já passou.
+ * Nenhum valor é reembolsado.
+ */
+
 package com.decolar.sistema_voos.policy;
 
 import java.math.BigDecimal;
