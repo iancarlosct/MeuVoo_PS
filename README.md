@@ -57,6 +57,40 @@ Caso o navegador não abra automaticamente, navegue até `src\main\resources\sta
   - **Senha:** (vazio)
 - Certifique-se de que a porta `8080` esteja livre antes de iniciar o backend.
 
+## ✨ Funcionalidades Implementadas
+
+1. **Busca de Voos por Rota** – Pesquisa de passagens informando origem, destino e data, com fallback automático para datas próximas quando não há resultados exatos.
+2. **Busca por Orçamento** – Ferramenta de recomendação onde o usuário informa apenas o valor máximo que deseja gastar e o sistema sugere até três destinos diferentes.
+3. **Autenticação e Perfil de Usuário** – Cadastro e login com validação de e‑mail, CPF e senha com hash SHA‑256. A sessão é gerenciada dinamicamente no cabeçalho.
+4. **Carrinho de Compras** – Adição de múltiplos voos com cálculo automático do total, incluindo taxas. Os itens são persistidos no navegador via `localStorage`.
+5. **Seleção de Assentos** – Mapa visual interativo das poltronas do avião, com escolha individual por passageiro e verificação de disponibilidade.
+6. **Gestão de Bagagens** – Adição de franquias de 15kg e 23kg por passageiro, com recálculo instantâneo do preço final da reserva.
+7. **Solicitações Especiais** – Registro de necessidades de acessibilidade e restrições alimentares para cada passageiro.
+8. **Painel Minhas Viagens** – Histórico completo de reservas do usuário, com status, localizador e ações como check‑in, simulação de reembolso e cancelamento.
+9. **Check‑in Online** – Confirmação de presença no voo e geração de cartão de embarque visual para todos os passageiros.
+10. **Simulador de Reembolso** – Cálculo automático do valor a ser devolvido em caso de cancelamento, baseado em políticas de antecedência (90%, 50% ou 0%).
+
+## 🧬 Orientação a Objetos no Projeto
+
+O projeto foi estruturado para demonstrar de forma clara e aplicada os quatro pilares da **Orientação a Objetos**:
+
+### 🔒 Encapsulamento
+- **Onde está:** Em todas as entidades JPA (`Flight`, `Seat`, `User`) e nas classes de política (`CancelPolicy` e subclasses).
+- **Exemplo:** Atributos privados com getters e setters públicos (`private String from; public String getFrom()`).
+
+### 🎭 Abstração
+- **Onde está:** Na classe abstrata `CancelPolicy`.
+- **Exemplo:** Define os métodos `getPercentualReembolso()` e `getDescricao()` sem implementá‑los, forçando as subclasses a fornecerem a lógica concreta.
+
+### 🧬 Herança
+- **Onde está:** Na hierarquia de políticas de cancelamento.
+- **Exemplo:** `Antecedencia7DiasPolicy`, `Antecedencia2DiasPolicy`, `Antecedencia0DiasPolicy` e `VooJaOcorridoPolicy` herdam de `CancelPolicy`, reutilizando sua estrutura.
+
+### 🔄 Polimorfismo
+- **Onde está:** No serviço `ReembolsoService` e no frontend (`carrinho.js`).
+- **Exemplo no backend:** O método `determinarPolitica()` retorna uma referência de `CancelPolicy`, mas o objeto real é uma das subclasses. A chamada `politica.getPercentualReembolso()` executa o método da subclasse correta.
+- **Exemplo no frontend:** O objeto `acoesCarrinho` mapeia diferentes ações (assentos, bagagens, solicitações) para funções que são chamadas de forma polimórfica.
+
 ## 📞 Suporte
 
 Em caso de dúvidas, entre em contato com o desenvolvedor:  
